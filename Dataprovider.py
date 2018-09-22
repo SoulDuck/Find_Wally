@@ -21,13 +21,11 @@ class Dataprovider(object):
         # Not Waldo Train
         self.not_waldo_paths = self.not_waldo_paths[:-4]
         # Set Balance
-        self.waldo_paths = self.waldo_paths * 9
+        self.waldo_paths = self.waldo_paths *45
         # Lables
         self.labs = np.asarray([self.WALLY] * len(self.waldo_paths) + [self.NOT_WALLY] * len(self.not_waldo_paths))
         self.val_labs = np.asarray([self.WALLY] * len(self.val_waldo_paths) + [self.NOT_WALLY] * len(self.val_not_waldo_paths))
         # Validation
-
-
 
         if onehot :
             self.labs = self.cls2onehot(self.labs , cfg.n_classes)
