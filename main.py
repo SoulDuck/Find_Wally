@@ -15,6 +15,8 @@ if __name__ == '__main__':
             print 'Validation ... '
             pred, pred_cls, cost, accuracy =models.eval(dp.val_imgs , dp.val_labs,)
             models.save_models('models/{}.ckpt'.format(step))
+            print accuracy
+
 
 
 
