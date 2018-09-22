@@ -5,7 +5,7 @@ from models import Models
 from Dataprovider import Dataprovider
 from utils import show_progress
 if __name__ == '__main__':
-    dp = Dataprovider('./Hey-Waldo/128' , True)
+    dp = Dataprovider('./Hey-Waldo/256' , True)
 
     models = Models(2 , (256,256,3))
     batch_xs , batch_ys = dp.next_batch(batch_size=cfg.batch_size )
