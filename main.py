@@ -11,7 +11,7 @@ if __name__ == '__main__':
     for step in range(cfg.max_iter):
         show_progress(step , cfg.max_iter)
         models.training(batch_xs , batch_ys , cfg.lr)
-        if step % cfg.ckpt  == 1000 :
+        if step % cfg.ckpt  == 0 :
             print 'Validation ... '
             pred, pred_cls, cost, accuracy =models.eval(dp.val_imgs , dp.val_labs,)
             models.save_models('models/{}.ckpt'.format(step))
