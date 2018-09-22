@@ -1,13 +1,15 @@
 from cnn import convolution2d , algorithm , gap
 import tensorflow as tf
+from aug import apply_aug_lv0 , aug_lv0
 class Models(object):
+
     def __init__(self, n_classes , img_shape):
 
         self.n_classes = n_classes
         self.img_shape = img_shape
         self._define_placeholder()
         # Model
-        self.simple_convnet([32,32,64,64,128] , [5,3,3,2,2] , [2,2,2,2,2] , self.n_classes)
+        self.simple_convnet([32,32,64,64,128] , [5,3,3,2,2] , [2,2,2,2,2] , self.n_classes )
         # trainer
         self.trainer('adam', True)
         # start Session
@@ -22,8 +24,10 @@ class Models(object):
         self.phase_train = tf.placeholder(dtype=tf.bool, name='phase_train')
         self.lr_ = tf.placeholder(dtype=tf.float32, name='learning_rate')
 
-    def simple_convnet(self , out_chs, kernels , strides  , n_classes):
+    def simple_convnet(self , out_chs, kernels , strides  , n_classes ):
+        apply_aug_lv0(self.x_ , aug_lv0, self.phase_train , crop_h = self.img_h , crop_w = self.img_w )
         layer = self.x_
+
         assert len(out_chs) == len(kernels) == len(strides)
         for i in range(len(out_chs)):
             layer = convolution2d('conv{}'.format(i) , layer , out_chs[i] , kernels[i] , strides[i] )
