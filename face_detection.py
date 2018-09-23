@@ -9,7 +9,7 @@ def convertToRGB(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 
-test = cv2.imread('waldo_small.png')
+test = cv2.imread('waldo_small.jpg')
 # Convert RGB ==> Greys
 gray_img = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 #load cascade classifier training file for haarcascade
