@@ -15,7 +15,7 @@ print np.shape(test)
 gray_img = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 #load cascade classifier training file for haarcascade
 #haar_face_cascade = cv2.CascadeClassifier('opencv/data/lbpcascades/lbpcascade_frontalface.xml')
-haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml.xml')
+haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml')
 
 faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=1.2, minNeighbors=5);
 
