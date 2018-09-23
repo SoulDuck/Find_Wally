@@ -40,7 +40,8 @@ detect_list=[
     'haarcascade_russian_plate_number.xml',]
 
 for detector in detect_list:
-    detector_name = os.path.splitext(detector)
+    detector_name = os.path.splitext(os.path.split(detector)[-1])
+    print detector
     haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/{}'.format(detector))
     faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=5);
 
