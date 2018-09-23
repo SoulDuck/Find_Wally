@@ -9,7 +9,7 @@ def convertToRGB(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 
-test = cv2.imread('waldo_big_face.png')
+test = cv2.imread('waldo_small.png')
 # Convert RGB ==> Greys
 gray_img = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 #load cascade classifier training file for haarcascade
@@ -24,4 +24,4 @@ for (x, y, w, h) in faces:
     cv2.rectangle(test, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
 # write image
-cv2.imwrite('find_waldo_big_face.png', test)
+cv2.imwrite('find_waldo_small.png', test)
