@@ -18,3 +18,10 @@ faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbo
 
 # print the number of faces found
 print('Faces found: ', len(faces))
+
+#go over list of faces and draw them as rectangles on original colored
+for (x, y, w, h) in faces:
+    cv2.rectangle(test, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+# write image
+cv2.imwrite('test_find_face.png', test)
