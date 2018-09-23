@@ -25,8 +25,7 @@ for detector in detect_list:
     detector_name = os.path.splitext(os.path.split(detector)[-1])
     print detector
     haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/{}'.format(detector))
-
-    scale_factors = list(np.asarray(range(1, 50)) * 0.1)
+    scale_factors = list(np.asarray(range(10, 50)) * 0.1)
     for scale_factor in scale_factors:
         print scale_factor
         faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=scale_factor, minNeighbors=5);
