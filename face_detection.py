@@ -20,7 +20,7 @@ gray_img = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 #load cascade classifier training file for haarcascade
 #haar_face_cascade = cv2.CascadeClassifier('opencv/data/lbpcascades/lbpcascade_frontalface.xml')
 
-detect_list = cfg.facedetect_list
+detect_list = cfg.detect_list
 for detector in detect_list:
     detector_name = os.path.splitext(os.path.split(detector)[-1])
     print detector
