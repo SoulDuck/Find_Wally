@@ -11,7 +11,7 @@ def convertToRGB(img):
 
 
 #dataset_name = 'waldo_big'
-dataset_name = 'waldo_original/1'
+dataset_name = 'waldo_world'
 test = cv2.imread('{}.jpg'.format(dataset_name))
 # Convert RGB ==> Greys
 print np.shape(test)
