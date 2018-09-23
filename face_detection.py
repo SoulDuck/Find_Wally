@@ -24,4 +24,4 @@ for (x, y, w, h) in faces:
     cv2.rectangle(test, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
 # write image
-cv2.imwrite('test_find_face.png', test)
+cv2.imwrite('waldo_big_face.png', test)
