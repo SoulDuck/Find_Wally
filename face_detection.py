@@ -11,6 +11,7 @@ def convertToRGB(img):
 
 test = cv2.imread('waldo_small.jpg')
 # Convert RGB ==> Greys
+print np.shape(test)
 gray_img = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 #load cascade classifier training file for haarcascade
 haar_face_cascade = cv2.CascadeClassifier('opencv/data/lbpcascades/lbpcascade_frontalface.xml')
