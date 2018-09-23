@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 #import matplotlib library
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 #importing time library for speed comparisons of both classifiers
 import time
 
