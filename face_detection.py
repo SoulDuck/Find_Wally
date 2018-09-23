@@ -12,7 +12,7 @@ def convertToRGB(img):
 
 
 #dataset_name = 'waldo_big'
-dataset_name = 'waldo_world'
+dataset_name = 'waldo_small'
 test = cv2.imread('{}.png'.format(dataset_name))
 # Convert RGB ==> Greys
 print np.shape(test)
