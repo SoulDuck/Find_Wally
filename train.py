@@ -72,7 +72,7 @@ flags.DEFINE_integer('worker_replicas', 1, 'Number of worker+trainer '
 flags.DEFINE_integer('ps_tasks', 0,
                      'Number of parameter server tasks. If None, does not use '
                      'a parameter server.')
-flags.DEFINE_string('train_dir', '',
+flags.DEFINE_string('train_dir', 'training',
                     'Directory to save the checkpoints and training summaries.')
 
 flags.DEFINE_string('pipeline_config_path', 'training/ssd_mobilenet_v1_coco.config',
