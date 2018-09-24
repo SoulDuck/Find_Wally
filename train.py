@@ -88,6 +88,7 @@ flags.DEFINE_string('model_config_path', '',
 
 FLAGS = flags.FLAGS
 print FLAGS.pipeline_config_path
+exit()
 
 def get_configs_from_pipeline_file():
   """Reads training configuration from a pipeline_pb2.TrainEvalPipelineConfig.
