@@ -63,7 +63,7 @@ flags = tf.app.flags
 flags.DEFINE_string('master', '', 'BNS name of the TensorFlow master to use.')
 flags.DEFINE_integer('task', 0, 'task id')
 flags.DEFINE_integer('num_clones', 1, 'Number of clones to deploy per worker.')
-flags.DEFINE_boolean('clone_on_cpu', False,
+flags.DEFINE_boolean('clone_on_cpu', True,
                      'Force clones to be deployed on CPU.  Note that even if '
                      'set to False (allowing ops to run on gpu), some ops may '
                      'still be run on the CPU if they have no GPU kernel.')
@@ -72,10 +72,11 @@ flags.DEFINE_integer('worker_replicas', 1, 'Number of worker+trainer '
 flags.DEFINE_integer('ps_tasks', 0,
                      'Number of parameter server tasks. If None, does not use '
                      'a parameter server.')
-flags.DEFINE_string('train_dir', 'training',
+flags.DEFINE_string('train_dir', '/Users/seongjungkim/PycharmProjects/Find_Wally/training'
+                                 '',
                     'Directory to save the checkpoints and training summaries.')
 
-flags.DEFINE_string('pipeline_config_path', 'training/ssd_mobilenet_v1_coco.config',
+flags.DEFINE_string('pipeline_config_path', '/Users/seongjungkim/PycharmProjects/Find_Wally/training/ssd_mobilenet_v1_coco.config',
                     'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
                     'file. If provided, other configs are ignored')
 
@@ -87,7 +88,6 @@ flags.DEFINE_string('model_config_path', '',
                     'Path to a model_pb2.DetectionModel config file.')
 
 FLAGS = flags.FLAGS
-print FLAGS
 
 
 def get_configs_from_pipeline_file():
@@ -154,6 +154,7 @@ def main(_):
   create_input_dict_fn = functools.partial(
       input_reader_builder.build, input_config)
 
+
   env = json.loads(os.environ.get('TF_CONFIG', '{}'))
   cluster_data = env.get('cluster', None)
   cluster = tf.train.ClusterSpec(cluster_data) if cluster_data else None
@@ -194,7 +195,6 @@ def main(_):
   trainer.train(create_input_dict_fn, model_fn, train_config, master, task,
                 FLAGS.num_clones, worker_replicas, FLAGS.clone_on_cpu, ps_tasks,
                 worker_job_name, is_chief, FLAGS.train_dir)
-
 
 if __name__ == '__main__':
   tf.app.run()

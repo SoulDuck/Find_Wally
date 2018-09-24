@@ -70,6 +70,7 @@ def build(model_config, is_training):
     raise ValueError('model_config not of type model_pb2.DetectionModel.')
   meta_architecture = model_config.WhichOneof('model')
   if meta_architecture == 'ssd':
+    print 'ssd model was builded!'
     return _build_ssd_model(model_config.ssd, is_training)
   if meta_architecture == 'faster_rcnn':
     return _build_faster_rcnn_model(model_config.faster_rcnn, is_training)
@@ -120,7 +121,6 @@ def _build_ssd_model(ssd_config, is_training):
       model_class_map).
   """
   num_classes = ssd_config.num_classes
-
   # Feature extractor
   feature_extractor = _build_ssd_feature_extractor(ssd_config.feature_extractor,
                                                    is_training)
@@ -140,6 +140,7 @@ def _build_ssd_model(ssd_config, is_training):
   (classification_loss, localization_loss, classification_weight,
    localization_weight,
    hard_example_miner) = losses_builder.build(ssd_config.loss)
+
   normalize_loss_by_num_matches = ssd_config.normalize_loss_by_num_matches
 
   return ssd_meta_arch.SSDMetaArch(

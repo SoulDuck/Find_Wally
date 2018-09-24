@@ -161,6 +161,7 @@ def train(create_tensor_dict_fn, create_model_fn, train_config, master, task,
       preprocessor_builder.build(step)
       for step in train_config.data_augmentation_options]
 
+
   with tf.Graph().as_default():
     # Build a configuration specifying multi-GPU and multi-replicas.
     deploy_config = model_deploy.DeploymentConfig(
@@ -190,6 +191,8 @@ def train(create_tensor_dict_fn, create_model_fn, train_config, master, task,
     model_fn = functools.partial(_create_losses,
                                  create_model_fn=create_model_fn)
     clones = model_deploy.create_clones(deploy_config, model_fn, [input_queue])
+    exit()
+
     first_clone_scope = clones[0].scope
 
     # Gather update_ops from the first clone. These contain, for example,
