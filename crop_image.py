@@ -1,10 +1,12 @@
 #-*- coding:utf-8 -*-
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
 import math
 import random
 import os , glob
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 def crop_img(np_img, h_stride, w_stride, crop_h, crop_w):
     ret_coords = []
     # 마지막 꼬투리는 무시합니다
