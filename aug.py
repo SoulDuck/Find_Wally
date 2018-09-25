@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import matplotlib as mpl
-mpl.use('Agg')
+#mpl.use('Agg')
 import tensorflow as tf
 import random
 from PIL import Image

@@ -6,6 +6,7 @@ from Dataprovider import WallyDataset_ver2
 from utils import show_progress
 from eval import Eval
 from aug import aug_lv3
+from utils import plot_images
 if __name__ == '__main__':
     fg_dir = 'foreground/original_fg'
     bg_dir = 'background/cropped_bg'
@@ -14,10 +15,16 @@ if __name__ == '__main__':
     # Setting models
     models = Models(n_classes = 2 , img_shape = (64,64,3))
     # Get batch xs , ys
-    batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30  , normalization=False)
+    batch_xs , batch_ys = dp.next_batch(fg_batchsize=5 , bg_batchsize=5  , normalization=False)
+
     # Augmenatation
-    batch_xs = aug_lv3(batch_xs )
-    batch_xs = batch_xs /255.
+    batch_xs = aug_lv3(batch_xs)
+    batch_xs = batch_xs / 255.
+
+
+    plot_images(batch_xs , batch_ys)
+
+
 
     # Training
     eval=Eval()

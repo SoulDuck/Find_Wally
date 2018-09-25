@@ -5,7 +5,7 @@ import math
 import random
 import os , glob
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 def crop_img(np_img, h_stride, w_stride, crop_h, crop_w):
     ret_coords = []
