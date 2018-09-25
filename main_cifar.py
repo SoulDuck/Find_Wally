@@ -19,6 +19,8 @@ if __name__ == '__main__':
     train_imgs , train_labs = get_images_labels(*train_filenames)
     test_imgs, test_labs = get_images_labels(*test_filenames)
 
+    train_imgs = train_imgs/255.
+    test_imgs = test_imgs / 255.
     train_labs = cls2onehot(train_labs, depth=10)
     test_labs = cls2onehot(test_labs, depth=10)
     train_imgs = train_imgs
@@ -38,6 +40,7 @@ if __name__ == '__main__':
     for step in range(cfg.max_iter):
         show_progress(step , cfg.max_iter)
         batch_xs, batch_ys = next_batch(train_imgs, train_labs, 60)
+
         train_cost = models.training(batch_xs , batch_ys , cfg.lr)
         if step % cfg.ckpt  == 0 :
             print 'Validation ... '
