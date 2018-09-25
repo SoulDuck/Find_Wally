@@ -130,17 +130,18 @@ if __name__ == '__main__':
     #
     imgs_coords = img_processing.generate_copped_imgs('test_imgs' ,  32, 32 ,64, 64)
     print imgs_coords.keys()
-    for key in imgs_coords.keys()[:]:
+    for key in imgs_coords.keys()[2:]:
         imgs, coords = imgs_coords[key]
-
+        coords_indices = zip(coords , range(len(coords)))
         print np.shape(imgs)
         for i in range(50):
-            plot_images(imgs[40*i:40*(i+1)] ,coords[40*i:40*(i+1)])
+
+            plot_images(imgs[40*i:40*(i+1)] ,coords_indices[40*i:40*(i+1)])
 
 
-    # 1,33 1.png
-    # 13,43 3.png
-    # 3,20 3,21 2.png
+    # [1,33](73) ,[1,32](72) 1.png
+    # [13,43](875) [13,42](874) 3.png
+    # [3,20](146) [3,21](147)    2.png
 
 
 

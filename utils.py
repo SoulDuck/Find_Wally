@@ -40,7 +40,7 @@ def plot_images(imgs , names=None , random_order=False , savepath=None):
         img=imgs[ind]
         plt.imshow(img)
         if not names==None:
-            ax.set_title(names[ind])
+            ax.set_title(names[ind] , fontsize=8)
         ax.axis('off')
 
     if not savepath is None:
