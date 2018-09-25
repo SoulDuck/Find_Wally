@@ -20,11 +20,7 @@ if __name__ == '__main__':
     # Augmenatation
     batch_xs = aug_lv3(batch_xs)
     batch_xs = batch_xs / 255.
-
-
-    plot_images(batch_xs , batch_ys)
-
-
+    #plot_images(batch_xs , batch_ys)
 
     # Training
     eval=Eval()
