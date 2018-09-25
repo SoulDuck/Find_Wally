@@ -246,7 +246,7 @@ if __name__ == '__main__':
     imgs_coords = img_processing.generate_copped_imgs('test_imgs' ,  32, 32 ,64, 64)
 
     print imgs_coords.keys()
-    for key in imgs_coords.keys()[2:]:
+    for key in imgs_coords.keys()[:]:
         imgs, coords = imgs_coords[key]
 
         np.save(key.replace('png','npy'),imgs)
