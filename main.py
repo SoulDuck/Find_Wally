@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # Get batch xs , ys
     batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30  , normalization=False)
     # Augmenatation
-    imgs = aug_lv3(batch_xs )
+    batch_xs = aug_lv3(batch_xs )
     batch_xs = batch_xs /255.
 
     # Training
