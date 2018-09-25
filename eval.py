@@ -27,7 +27,7 @@ class Eval():
         max_value= np.max(preds , axis = 0 )
 
         # debug
-        # print 'max idx : {} , max value : {} , answer_indicies : {}'.format(max_idx , max_value , answer_indices)
+        print 'max idx : {} , max value : {} , answer_indicies : {}'.format(max_idx , max_value , answer_indices)
         answer=False
         if max_value > 0.5:
             if max_idx in answer_indices:
