@@ -24,7 +24,9 @@ detect_list = cfg.detect_list
 for detector in detect_list:
     detector_name = os.path.splitext(os.path.split(detector)[-1])
     print detector
-    haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/{}'.format(detector))
+    #haar_face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/{}'.format(detector))
+    haar_face_cascade = cv2.CascadeClassifier('cascade.xml')
+    #exit()
     scale_factors = list(np.asarray(range(11, 50)) * 0.1)
     for scale_factor in scale_factors:
         print scale_factor

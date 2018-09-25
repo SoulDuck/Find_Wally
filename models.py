@@ -11,7 +11,7 @@ class Models(object):
         # Model
         self.simple_convnet([16,16,32,32,64] , [3,3,3,3,3] , [2,1,1,2,2] , self.n_classes )
         # trainer
-        self.trainer('adam', True)
+        self.trainer('adam', False)
         # start Session
         self._start_sess()
 
