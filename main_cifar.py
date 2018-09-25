@@ -23,7 +23,7 @@ if __name__ == '__main__':
     test_labs = cls2onehot(test_labs, depth=10)
 
     # Setting models
-    models = Models(n_classes = 10 , img_shape = (64,64,3))
+    models = Models(n_classes = 10 , img_shape = (32,32,3))
     # Get batch xs , ys
     batch_xs , batch_ys = next_batch(train_imgs ,train_labs ,60)
 
