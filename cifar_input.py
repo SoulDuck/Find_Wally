@@ -104,7 +104,7 @@ def next_batch(imgs, labs, batch_size):
 
 
 if '__main__' == __name__:
-    #download_data_url(url , './cifar_10')
+    download_data_url(url , './cifar_10')
     train_filenames=glob.glob('cifar-10-batches-py/data_batch*')
     test_filenames=glob.glob('cifar-10-batches-py/test_batch*')
 
