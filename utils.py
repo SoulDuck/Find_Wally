@@ -2,6 +2,8 @@
 import sys
 import os, glob
 import math
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import random
 import numpy as np
