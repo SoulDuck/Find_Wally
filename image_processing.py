@@ -6,6 +6,8 @@ import glob
 from utils import show_progress , get_names , plot_images , get_name
 import numpy as np
 import random
+import tensorflow as tf
+import sys
 
 class ImageProcessing(object):
     def __init__(self):
@@ -127,6 +129,70 @@ class ImageProcessing(object):
 
 
 
+def make_tfrecord(tfrecord_path, resize ,*args ):
+    """
+    img source 에는 두가지 형태로 존재합니다 . str type 의 path 와
+    numpy 형태의 list 입니다.
+    :param tfrecord_path: e.g) './tmp.tfrecord'
+    :param img_sources: e.g)[./pic1.png , ./pic2.png] or list flatted_imgs
+    img_sources could be string , or numpy
+    :param labels: 3.g) [1,1,1,1,1,0,0,0,0]
+    :return:
+    """
+    if os.path.exists(tfrecord_path):
+        print tfrecord_path + 'is exists'
+        return
+    def _bytes_feature(value):
+        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+    def _int64_feature(value):
+        return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
+    writer = tf.python_io.TFRecordWriter(tfrecord_path)
+
+    flag=True
+    n_total =0
+    counts = []
+    for i,arg in enumerate(args):
+        print 'Label :{} , # : {} '.format(i , arg[0])
+        n_total += arg[0]
+        counts.append(0)
+
+    while(flag):
+        label=random.randint(0,len(args)-1)
+        n_max = args[label][0]
+        if counts[label] < n_max:
+            imgs = args[label][1]
+            n_imgs = len(args[label][1])
+            ind = counts[label] % n_imgs
+            np_img = imgs[ind]
+            counts[label] += 1
+        elif np.sum(np.asarray(counts)) ==  n_total:
+            for i, count in enumerate(counts):
+                print 'Label : {} , # : {} '.format(i, count )
+            flag = False
+        else:
+            continue;
+
+        height, width = np.shape(np_img)[:2]
+
+        msg = '\r-Progress : {0}'.format(str(np.sum(np.asarray(counts))) + '/' + str(n_total))
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+        if not resize is None:
+            np_img = np.asarray(Image.fromarray(np_img).resize(resize, Image.ANTIALIAS))
+        raw_img = np_img.tostring()  # ** Image to String **
+        example = tf.train.Example(features=tf.train.Features(feature={
+            'height': _int64_feature(height),
+            'width': _int64_feature(width),
+            'raw_image': _bytes_feature(raw_img),
+            'label': _int64_feature(label),
+            'filename': _bytes_feature(tf.compat.as_bytes(str(ind)))
+        }))
+        writer.write(example.SerializeToString())
+    writer.close()
+
+
 
 if __name__ == '__main__':
 
@@ -139,10 +205,11 @@ if __name__ == '__main__':
     imgs = img_processing.paths2imgs(paths , (64,64))
     print 'foreground images : {}'.format(np.shape(imgs))
     #
-    train_imgs , val_imgs, test_imgs= img_processing.divide_TVT(imgs , 0.1 ,0.1)
-    np.save('fg_train.npy' , train_imgs)
-    np.save('fg_test.npy', test_imgs)
-    np.save('fg_val.npy', val_imgs)
+    fg_train_imgs , fg_val_imgs, fg_test_imgs= img_processing.divide_TVT(imgs , 0.1 ,0.1)
+    np.save('fg_train.npy' , fg_train_imgs)
+    np.save('fg_test.npy', fg_test_imgs)
+    np.save('fg_val.npy', fg_val_imgs)
+
 
     # Background
     paths = np.asarray(glob.glob(os.path.join('background', 'cropped_bg', '*')))
@@ -153,12 +220,24 @@ if __name__ == '__main__':
     imgs = img_processing.paths2imgs(paths, (64, 64))
     print 'background images : {}'.format(np.shape(imgs))
 
-    train_imgs, val_imgs, test_imgs = img_processing.divide_TVT(imgs, 0.1, 0.1)
-    np.save('bg_train.npy', train_imgs)
-    np.save('bg_test.npy', test_imgs)
-    np.save('bg_val.npy', val_imgs)
+    bg_train_imgs, bg_val_imgs, bg_test_imgs = img_processing.divide_TVT(imgs, 0.1, 0.1)
+    np.save('bg_train.npy', bg_train_imgs)
+    np.save('bg_test.npy', bg_test_imgs)
+    np.save('bg_val.npy', bg_val_imgs)
 
 
+    #Make Tensorflow tfrecords
+    """
+    usage :    make_tfrecord(train_tfrecord_path, None, (len(label_0_train), label_0_train), (len(label_0_train), label_1_train),
+                  (len(label_0_train), label_2_train) )
+    """
+
+    n_train = len(bg_train_imgs)
+    n_test = len(bg_test_imgs)
+    n_val = len(bg_val_imgs)
+    make_tfrecord('train.tfrecord' , (64,64) , (n_train , fg_train_imgs) , (n_train , bg_train_imgs))
+    make_tfrecord('test.tfrecord', (64, 64), (n_test, fg_train_imgs), (n_test, bg_train_imgs))
+    make_tfrecord('val.tfrecord', (64, 64), (n_val, fg_train_imgs), (n_val, bg_train_imgs))
 
     exit()
     padded_imgs = img_processing.rect2square_imgs(list(imgs))
