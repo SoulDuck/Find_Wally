@@ -4,6 +4,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import math
 import random
+import os , glob
 def crop_img(np_img, h_stride, w_stride, crop_h, crop_w):
     ret_coords = []
     # 마지막 꼬투리는 무시합니다
@@ -44,14 +45,27 @@ def plot_images(imgs , names=None , random_order=False , savepath=None):
     plt.show()
 
 
+def generate_bg(src_dir , h_stride, w_stride, crop_h, crop_w, save_dir ):
+    paths = glob.glob(os.path.join(src_dir  , '*'))
+    for path in paths:
+        name =os.path.splitext(os.path.split(path)[-1])[0]
+        img = np.asarray(Image.open(path).convert('RGB'))
+        # Cropping Image
+        cropped_imgs , coords =crop_img(img,h_stride, w_stride, crop_h, crop_w)
+        cropped_imgs = np.asarray(cropped_imgs)
+
+        for i , cropped_img in enumerate(cropped_imgs ):
+            Image.fromarray(cropped_img).save(os.path.join( save_dir, '{}_{}.jpg'.format(name , i)))
+
+
+
+
+
+
 if __name__ == '__main__':
     img=Image.open('waldo_world.png').convert('RGB')
     np_img = np.asarray(img)
-    imgs , coords = crop_img(np_img , 32,32,64,64)
-
-    for img in imgs :
-        plt.imshow(img)
-        plt.show()
-
-
-
+    #imgs , coords = crop_img(np_img , 32,32,64,64)
+    src_dir ='./background/original_bg'
+    save_dir = './background/cropped_bg'
+    generate_bg(src_dir , 64, 64, 64, 64 , save_dir)

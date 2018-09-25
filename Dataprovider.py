@@ -3,7 +3,13 @@ from PIL import Image
 import numpy as np
 import random
 import configure as cfg
-class Dataprovider(object):
+from image_processing import ImageProcessing
+from utils import plot_images
+class DataProvider(object):
+    def __init__(self):
+        pass;
+
+class WallyDataset_ver1(object):
     def __init__(self , imgdir , onehot ):
         self.imgdir = imgdir
         self.WALLY = 0
@@ -49,22 +55,49 @@ class Dataprovider(object):
             img=np.asarray(img)
         return img
 
-    def next_batch(self , batch_size):
 
-        indices = random.sample(range(len(self.labs)) , batch_size)
-        batch_ys = self.labs[indices]
-        batch_xs = self.imgs[indices]
-        return batch_xs , batch_ys
-    def cls2onehot(self, cls , depth):
-        cls=cls.astype(np.int32)
-        labels = np.zeros([len(cls), depth] , dtype=np.int32)
-        for i, ind in enumerate(cls):
-            labels[i][ind:ind + 1] = 1
-        return labels
+
+class WallyDataset_ver2():
+    def __init__(self , fg_dir , bg_dir , resize ):
+        self.WALLY = 0
+        self.NOT_WALLY = 1
+        self.fg_paths = glob.glob(os.path.join(fg_dir , '*'))
+        self.bg_paths = glob.glob(os.path.join(bg_dir, '*'))
+        self.resize = resize
+        print '# Foreground : {} \t # Background : {}'.format(len(self.fg_paths) , len(self.bg_paths))
+
+        # foreground images
+        image_process = ImageProcessing()
+        self.fg_imgs = image_process.paths2imgs(self.fg_paths , self.resize)
+        self.n_fg = len(self.fg_imgs)
+        # background imaegs
+        self.bg_imgs = image_process.paths2imgs(self.bg_paths[:100] , self.resize)
+        self.n_bg = len(self.bg_imgs)
+
+    def next_batch(self , fg_batchsize , bg_batchsize):
+        fg_indices = random.sample(range(self.n_fg) ,fg_batchsize )
+        bg_indices = random.sample(range(self.n_bg) , bg_batchsize)
+
+        batch_fgs =self.fg_imgs[fg_indices]
+        batch_bgs = self.bg_imgs[bg_indices]
+        batch_xs = np.vstack([batch_fgs, batch_bgs])
+        batch_ys = [self.WALLY] * fg_batchsize + [self.NOT_WALLY] * bg_batchsize
+
+        return batch_xs ,batch_ys
+
+
 
 
 if __name__ == '__main__':
-    dataprovider = Dataprovider('./Hey-Waldo/256')
+    fg_dir = 'cropped_fg/original_fg'
+    bg_dir = 'background/cropped_bg'
+
+    dataprovider = WallyDataset_ver2(fg_dir , bg_dir , resize = (64,64))
+    batch_xs , batch_ys = dataprovider.next_batch(10,10)
+    plot_images(batch_xs , batch_ys )
+
+
+
 
 
 

@@ -2,13 +2,18 @@ import tensorflow as tf
 import numpy as np
 import configure as cfg
 from models import Models
-from Dataprovider import Dataprovider
+from Dataprovider import WallyDataset_ver2
 from utils import show_progress
 if __name__ == '__main__':
-    dp = Dataprovider('./Hey-Waldo/256' , True)
+    fg_dir = 'cropped_fg/original_fg'
+    bg_dir = 'background/cropped_bg'
+    # dp == DataProvider
+    dp = WallyDataset_ver2(fg_dir, bg_dir, resize=(64, 64))
+
 
     models = Models(2 , (256,256,3))
-    batch_xs , batch_ys = dp.next_batch(batch_size=cfg.batch_size )
+    batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30 )
+
 
     for step in range(cfg.max_iter):
         show_progress(step , cfg.max_iter)
