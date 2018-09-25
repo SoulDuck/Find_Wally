@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Setting models
     models = Models(n_classes = 2 , img_shape = (64,64,3))
     # Get batch xs , ys
-    batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30 )
+    batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30  , normalization=True)
 
     # Training
     eval=Eval()
