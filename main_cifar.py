@@ -40,12 +40,15 @@ if __name__ == '__main__':
         if step % cfg.ckpt  == 0 :
             print 'Validation ... '
 
-            pred_op, pred_cls, eval_cost, accuracy = models.eval(test_imgs, test_labs)
+            pred, pred_cls, eval_cost, accuracy = models.eval(test_imgs, test_labs)
             #pred_op, pred_cls, eval_cost, accuracy = models.eval(dp.val_imgs , dp.val_labs,)
             #acc = eval.get_acc(sess_op=models.sess, preds_op=models.pred[:,0], batch_size=60, x_op=models.x_,
             #                   phase_train=models.phase_train)
             print accuracy
             models.save_models('models/{}.ckpt'.format(step))
             print 'train cost : {}'.format(train_cost)
+            print 'test cost : {}'.format(eval_cost)
+            print 'test_acc : {}'.format(accuracy)
+
 
 
