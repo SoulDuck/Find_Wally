@@ -9,12 +9,11 @@ if __name__ == '__main__':
     bg_dir = 'background/cropped_bg'
     # dp == DataProvider
     dp = WallyDataset_ver2(fg_dir, bg_dir, resize=(64, 64))
-
-
-    models = Models(2 , (256,256,3))
+    # Setting models
+    models = Models(n_classes = 2 , img_shape = (64,64,3))
+    # Get batch xs , ys
     batch_xs , batch_ys = dp.next_batch(fg_batchsize=30 , bg_batchsize=30 )
-
-
+    # Training
     for step in range(cfg.max_iter):
         show_progress(step , cfg.max_iter)
         train_cost = models.training(batch_xs , batch_ys , cfg.lr)
