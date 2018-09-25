@@ -3,8 +3,8 @@ import numpy as np
 from PIL import Image
 import cv2 , os
 import glob
-from utils import show_progress , get_names , plot_images
-
+from utils import show_progress , get_names , plot_images , get_name
+import numpy as np
 
 
 class ImageProcessing(object):
@@ -76,6 +76,42 @@ class ImageProcessing(object):
             np_imgs.append(np_img)
         return np.asarray(np_imgs)
 
+    def crop_img(self, np_img, h_stride, w_stride, crop_h, crop_w):
+        ret_coords = []
+        # 마지막 꼬투리는 무시합니다
+        ret_imgs = []
+        h, w, ch = np.shape(np_img)
+        h_hops = (h - crop_h) / h_stride + 1
+        w_hops = (w - crop_w) / w_stride + 1
+        print h_hops, w_hops
+
+        for h in range(h_hops):
+            for w in range(w_hops):
+                h_start = h * h_stride
+                h_end = ((h) * h_stride) + crop_h
+                w_start = (w * w_stride)
+                w_end = ((w) * w_stride) + crop_w
+                ret_imgs.append(np_img[h_start: h_end, w_start: w_end, :])
+                ret_coords.append([h, w])
+
+        return ret_imgs, ret_coords
+
+
+    def generate_copped_imgs(self, src_dir, h_stride, w_stride, crop_h, crop_w):
+        paths = glob.glob(os.path.join(src_dir, '*'))
+
+        cropped_imgs_coords = {}
+
+        for path in paths:
+            name = get_name(path)
+            img = np.asarray(Image.open(path).convert('RGB'))
+            # Cropping Images
+            cropped_imgs, coords = self.crop_img(img, h_stride, w_stride, crop_h, crop_w)
+            cropped_imgs = np.asarray(cropped_imgs)
+            cropped_imgs_coords[name] = [cropped_imgs , coords]
+
+        return cropped_imgs_coords
+
 
 
 
@@ -89,14 +125,27 @@ if __name__ == '__main__':
     # Load Image from paths
     imgs = img_processing.paths2imgs(paths , None )
     # padding pad to rect
-
     padded_imgs = img_processing.rect2square_imgs(list(imgs))
     padded_imgs = np.asarray(padded_imgs) / 255.
-    import matplotlib.pyplot as plt
-    for padded_img in padded_imgs:
+    #
+    imgs_coords = img_processing.generate_copped_imgs('test_imgs' ,  32, 32 ,64, 64)
+    print imgs_coords.keys()
+    for key in imgs_coords.keys()[:]:
+        imgs, coords = imgs_coords[key]
 
-        plt.imshow(padded_img)
-        plt.show()
+        print np.shape(imgs)
+        for i in range(50):
+            plot_images(imgs[40*i:40*(i+1)] ,coords[40*i:40*(i+1)])
+
+
+    # 1,33 1.png
+    # 13,43 3.png
+    # 3,20 3,21 2.png
+
+
+
+
+
 
 
 
