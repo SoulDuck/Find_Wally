@@ -20,7 +20,7 @@ if __name__ == '__main__':
     test_imgs, test_labs = get_images_labels(*test_filenames)
 
     # Setting models
-    models = Models(n_classes = 2 , img_shape = (64,64,3))
+    models = Models(n_classes = 10 , img_shape = (64,64,3))
     # Get batch xs , ys
     batch_xs , batch_ys = next_batch(train_imgs ,test_labs ,60)
 
