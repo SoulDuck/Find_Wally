@@ -32,5 +32,6 @@ if __name__ == '__main__':
             models.save_models('models/{}.ckpt'.format(step))
 
             print acc
+            print 'train cost : {}'.format(train_cost)
 
 
