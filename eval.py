@@ -45,7 +45,6 @@ class Eval():
 
             preds = sess_op.run(preds_op ,  {x_op : batch_xs , phase_train : False })
             preds_list.extend(preds)
-        print preds_list
         assert len(preds_list) == len(imgs)
         return preds_list
 
