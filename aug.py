@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import matplotlib as mpl
-mpl.use('Agg')
+#mpl.use('Agg')
 import tensorflow as tf
 import random
 from PIL import Image
@@ -212,7 +212,23 @@ def aug_lv3(images):
 
 
 if __name__ == '__main__':
-    img = Image.open('/Users/seongjungkim/PycharmProjects/everyNN/my_data/fundus_sample.png').resize((540, 540),
+    paths =['waldo_big.png',
+    #'waldo_small.png',
+    #'waldo_world.png',
+    'wally_medium.jpg']
+
+    imgs = map(lambda path: np.asarray(Image.open(path)), paths)
+
+    imgs = aug_lv3(imgs)
+
+    for img in imgs:
+        plt.imshow(img)
+        plt.show()
+    """
+    img0 = np.asarray(Image.open('waldo_big.png'))
+    img0 = np.asarray(Image.open('waldo_big.png'))
+    img0 = np.asarray(Image.open('waldo_big.png'))
+    
                                                                                                   Image.ANTIALIAS)
     print 'a'
     img=np.asarray(img)
@@ -253,5 +269,4 @@ if __name__ == '__main__':
     #print consume_time
     #utils.plot_images(clahe_imgs/255., savepath='clahe_imgs.png')
     # augmentation lv1
-    #augimgs=aug_lv1(imgs)
-
+    #augimgs=aug_lv1(imgs)  """
