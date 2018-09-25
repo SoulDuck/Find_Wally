@@ -36,10 +36,13 @@ class Eval():
                 answer = False
         return answer
 
-    def validate(self, imgs, sess_op, preds_op, batch_size, x_op, phase_train):
+    def validate(self, imgs, sess_op, preds_op, batch_size, x_op, phase_train , normalize):
         batch_list = self.divide_images(imgs , batch_size)
         preds_list = []
         for batch_xs in batch_list:
+            if normalize and np.max(batch_xs) > 1:
+                batch_xs = batch_xs/255.
+
             preds = sess_op.run(preds_op ,  {x_op : batch_xs , phase_train : False })
             preds_list.extend(preds)
 
