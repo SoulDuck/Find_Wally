@@ -137,6 +137,7 @@ if __name__ == '__main__':
     img_processing = ImageProcessing()
     # Load Image from paths
     imgs = img_processing.paths2imgs(paths , (64,64))
+    print 'foreground images : {}'.format(np.shape(imgs))
     #
     train_imgs , val_imgs, test_imgs= img_processing.divide_TVT(imgs , 0.1 ,0.1)
     np.save('fg_train.npy' , train_imgs)
@@ -150,7 +151,7 @@ if __name__ == '__main__':
     paths = paths[indices]
     names = names[indices]
     imgs = img_processing.paths2imgs(paths, (64, 64))
-    print np.shape(imgs)
+    print 'background images : {}'.format(np.shape(imgs))
 
     train_imgs, val_imgs, test_imgs = img_processing.divide_TVT(imgs, 0.1, 0.1)
     np.save('bg_train.npy', train_imgs)
