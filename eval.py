@@ -54,7 +54,7 @@ class Eval():
         for key in self.imgs_coords.keys():
             imgs , coords  = self.imgs_coords[key]
             answer_indices = self.answer_sheet[key]
-            preds = self.validate(imgs, sess_op, preds_op, batch_size, x_op, phase_train)
+            preds = self.validate(imgs, sess_op, preds_op, batch_size, x_op, phase_train , normalize=True)
             answer = self.check_preds(preds , answer_indices)
             answers.append(answer)
         return np.sum(answers) / float(len(answers))
