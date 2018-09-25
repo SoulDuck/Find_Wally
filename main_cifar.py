@@ -13,8 +13,8 @@ if __name__ == '__main__':
     # dp == DataProvider
 
     #download_data_url(url , './cifar_10')
-    train_filenames=glob.glob('cifar-10-batches-py/data_batch*')
-    test_filenames=glob.glob('cifar-10-batches-py/test_batch*')
+    train_filenames=glob.glob('cifar_10/cifar-10-batches-py/data_batch*')
+    test_filenames=glob.glob('cifar_10/cifar-10-batches-py/test_batch*')
 
     train_imgs , train_labs = get_images_labels(*train_filenames)
     test_imgs, test_labs = get_images_labels(*test_filenames)
