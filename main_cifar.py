@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # Setting models
     models = Models(n_classes = 10 , img_shape = (32,32,3))
     # Get batch xs , ys
-    batch_xs , batch_ys = next_batch(train_imgs ,train_labs ,60)
+
 
     # Augmenatation
     # batch_xs = aug_lv3(batch_xs)
@@ -37,6 +37,7 @@ if __name__ == '__main__':
     eval=Eval()
     for step in range(cfg.max_iter):
         show_progress(step , cfg.max_iter)
+        batch_xs, batch_ys = next_batch(train_imgs, train_labs, 60)
         train_cost = models.training(batch_xs , batch_ys , cfg.lr)
         if step % cfg.ckpt  == 0 :
             print 'Validation ... '

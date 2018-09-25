@@ -15,16 +15,17 @@ if __name__ == '__main__':
     # Setting models
     models = Models(n_classes = 2 , img_shape = (64,64,3))
     # Get batch xs , ys
-    batch_xs , batch_ys = dp.next_batch(fg_batchsize=5 , bg_batchsize=5  , normalization=False)
+
 
     # Augmenatation
-    batch_xs = aug_lv3(batch_xs)
-    batch_xs = batch_xs / 255.
     #plot_images(batch_xs , batch_ys)
 
     # Training
     eval=Eval()
     for step in range(cfg.max_iter):
+        batch_xs, batch_ys = dp.next_batch(fg_batchsize=5, bg_batchsize=5, normalization=False)
+        batch_xs = aug_lv3(batch_xs)
+        batch_xs = batch_xs / 255.
         show_progress(step , cfg.max_iter)
         train_cost = models.training(batch_xs , batch_ys , cfg.lr)
         if step % cfg.ckpt  == 0 :
