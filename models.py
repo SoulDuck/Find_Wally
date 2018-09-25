@@ -9,7 +9,7 @@ class Models(object):
         self.img_shape = img_shape
         self._define_placeholder()
         # Model
-        self.simple_convnet([32,32,64,64,128] , [5,3,3,3,3] , [2,2,2,2,2] , self.n_classes )
+        self.simple_convnet([16,16,32,32,64] , [3,3,3,3,3] , [2,1,1,2,2] , self.n_classes )
         # trainer
         self.trainer('adam', True)
         # start Session
