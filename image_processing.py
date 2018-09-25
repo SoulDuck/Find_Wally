@@ -238,15 +238,19 @@ if __name__ == '__main__':
     make_tfrecord('train.tfrecord' , (64,64) , (n_train , fg_train_imgs) , (n_train , bg_train_imgs))
     make_tfrecord('test.tfrecord', (64, 64), (n_test, fg_train_imgs), (n_test, bg_train_imgs))
     make_tfrecord('val.tfrecord', (64, 64), (n_val, fg_train_imgs), (n_val, bg_train_imgs))
+    #
 
-    exit()
     padded_imgs = img_processing.rect2square_imgs(list(imgs))
     padded_imgs = np.asarray(padded_imgs) / 255.
     #
     imgs_coords = img_processing.generate_copped_imgs('test_imgs' ,  32, 32 ,64, 64)
+
     print imgs_coords.keys()
     for key in imgs_coords.keys()[2:]:
         imgs, coords = imgs_coords[key]
+
+        np.save(key.replace('png','npy'),imgs)
+
         coords_indices = zip(coords , range(len(coords)))
         print np.shape(imgs)
         for i in range(50):
