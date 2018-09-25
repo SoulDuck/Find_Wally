@@ -5,7 +5,7 @@ import cv2 , os
 import glob
 from utils import show_progress , get_names , plot_images , get_name
 import numpy as np
-
+import random
 
 class ImageProcessing(object):
     def __init__(self):
@@ -112,19 +112,54 @@ class ImageProcessing(object):
 
         return cropped_imgs_coords
 
+    def divide_TVT(self , src , ratio_val , ratio_test):
+
+        """divide source into train ,validation ,test """
+
+        n_val = int(len(src) * ratio_val)
+        n_test =  int(len(src) * ratio_test)
+        src_val = src[:n_val]
+        src_test = src[n_val: n_val + n_test]
+        src_train= src[n_val + n_test : ]
+
+        return src_train , src_val , src_test
+
+
 
 
 
 if __name__ == '__main__':
 
-    paths = glob.glob(os.path.join('cropped_fg','original_fg' , '*'))
+    paths = glob.glob(os.path.join('foreground','original_fg' , '*'))
     names = get_names(paths)
 
-
+    # Foreground
     img_processing = ImageProcessing()
     # Load Image from paths
-    imgs = img_processing.paths2imgs(paths , None )
-    # padding pad to rect
+    imgs = img_processing.paths2imgs(paths , (64,64))
+    #
+    train_imgs , val_imgs, test_imgs= img_processing.divide_TVT(imgs , 0.1 ,0.1)
+    np.save('fg_train.npy' , train_imgs)
+    np.save('fg_test.npy', test_imgs)
+    np.save('fg_val.npy', val_imgs)
+
+    # Background
+    paths = np.asarray(glob.glob(os.path.join('background', 'cropped_bg', '*')))
+    names = np.asarray(get_names(paths))
+    indices = random.sample(range(len(paths)) , len(paths))[:7400]
+    paths = paths[indices]
+    names = names[indices]
+    imgs = img_processing.paths2imgs(paths, (64, 64))
+    print np.shape(imgs)
+
+    train_imgs, val_imgs, test_imgs = img_processing.divide_TVT(imgs, 0.1, 0.1)
+    np.save('bg_train.npy', train_imgs)
+    np.save('bg_test.npy', test_imgs)
+    np.save('bg_val.npy', val_imgs)
+
+
+
+    exit()
     padded_imgs = img_processing.rect2square_imgs(list(imgs))
     padded_imgs = np.asarray(padded_imgs) / 255.
     #
