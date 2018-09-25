@@ -4,7 +4,7 @@ import numpy as np
 import random
 import configure as cfg
 from image_processing import ImageProcessing
-from utils import plot_images
+from utils import plot_images  , cls2onehot
 class DataProvider(object):
     def __init__(self):
         pass;
@@ -82,6 +82,7 @@ class WallyDataset_ver2():
         batch_bgs = self.bg_imgs[bg_indices]
         batch_xs = np.vstack([batch_fgs, batch_bgs])
         batch_ys = [self.WALLY] * fg_batchsize + [self.NOT_WALLY] * bg_batchsize
+        batch_ys = cls2onehot(batch_ys ,depth = 2 )
 
         return batch_xs ,batch_ys
 

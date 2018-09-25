@@ -4,6 +4,7 @@ import os, glob
 import math
 import matplotlib.pyplot as plt
 import random
+import numpy as np
 
 def show_progress(i,max_iter):
     msg='\r progress {}/{}'.format(i, max_iter)
@@ -46,6 +47,26 @@ def plot_images(imgs , names=None , random_order=False , savepath=None):
     if not savepath is None:
         plt.savefig(savepath)
     plt.show()
+
+
+
+def cls2onehot(cls, depth):
+    debug_flag=False
+    if not type(cls).__module__ == np.__name__:
+        cls=np.asarray(cls)
+    cls=cls.astype(np.int32)
+    debug_flag = False
+    labels = np.zeros([len(cls), depth] , dtype=np.int32)
+    for i, ind in enumerate(cls):
+        labels[i][ind:ind + 1] = 1
+    if __debug__ == debug_flag:
+        print '#### data.py | cls2onehot() ####'
+        print 'show sample cls and converted labels'
+        print cls[:10]
+        print labels[:10]
+        print cls[-10:]
+        print labels[-10:]
+    return labels
 
 
 if __name__ == '__main__':
