@@ -71,7 +71,7 @@ class WallyDataset_ver2():
         self.fg_imgs = image_process.paths2imgs(self.fg_paths , self.resize)
         self.n_fg = len(self.fg_imgs)
         # background imaegs
-        self.bg_imgs = image_process.paths2imgs(self.bg_paths[:100] , self.resize)
+        self.bg_imgs = image_process.paths2imgs(self.bg_paths[:] , self.resize)
         self.n_bg = len(self.bg_imgs)
 
     def next_batch(self , fg_batchsize , bg_batchsize , normalization):
