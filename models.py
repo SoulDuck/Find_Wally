@@ -25,8 +25,8 @@ class Models(object):
         self.lr_ = tf.placeholder(dtype=tf.float32, name='learning_rate')
 
     def simple_convnet(self , out_chs, kernels , strides  , n_classes ):
-        apply_aug_lv0(self.x_ , aug_lv0, self.phase_train , crop_h = self.img_h , crop_w = self.img_w )
-        layer = self.x_
+        layer = apply_aug_lv0(self.x_ , aug_lv0, self.phase_train , crop_h = self.img_h , crop_w = self.img_w )
+        layer = layer
 
         assert len(out_chs) == len(kernels) == len(strides)
         for i in range(len(out_chs)):
