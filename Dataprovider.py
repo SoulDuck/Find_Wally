@@ -85,7 +85,7 @@ class WallyDataset_ver2():
         batch_ys = [self.WALLY] * fg_batchsize + [self.NOT_WALLY] * bg_batchsize
         batch_ys = cls2onehot(batch_ys ,depth = 2 )
 
-        indices = random.shuffle(range(len(batch_ys)) , len(batch_ys))
+        indices = random.sample(range(len(batch_ys)) , len(batch_ys))
         batch_xs = batch_xs[indices]
         batch_ys = batch_ys[indices]
 
