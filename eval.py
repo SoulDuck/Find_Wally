@@ -57,8 +57,8 @@ class Eval():
         return np.sum(answers) / float(len(answers))
 
     def divide_images(self, images, batch_size):
-        debug_flag_lv0 = True
-        debug_flag_lv1 = True
+        debug_flag_lv0 = False
+        debug_flag_lv1 = False
         if __debug__ == debug_flag_lv0:
             print 'debug start | utils.py | divide_images'
         batch_img_list = []
