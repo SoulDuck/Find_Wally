@@ -88,7 +88,7 @@ def get_cifar_images_labels(onehot=True , data_dir ='./cifar_10/cifar-10-batches
         train_labs=cls2onehot(train_labs , 10 )
         test_labs = cls2onehot(test_labs, 10)
 
-    num_classes=10
+
 
 
     return train_imgs ,train_labs , test_imgs ,test_labs
@@ -104,7 +104,7 @@ def next_batch(imgs, labs, batch_size):
 
 
 if '__main__' == __name__:
-    download_data_url(url , './cifar_10')
+    #download_data_url(url , './cifar_10')
     train_filenames=glob.glob('cifar-10-batches-py/data_batch*')
     test_filenames=glob.glob('cifar-10-batches-py/test_batch*')
 

@@ -25,10 +25,7 @@ if __name__ == '__main__':
     # Setting models
     models = Models(n_classes = 10 , img_shape = (64,64,3))
     # Get batch xs , ys
-    batch_xs , batch_ys = next_batch(train_imgs ,test_labs ,60)
-
-
-
+    batch_xs , batch_ys = next_batch(train_imgs ,train_labs ,60)
 
     # Augmenatation
     # batch_xs = aug_lv3(batch_xs)
