@@ -21,8 +21,8 @@ if __name__ == '__main__':
 
     train_labs = cls2onehot(train_labs, depth=10)
     test_labs = cls2onehot(test_labs, depth=10)
-    train_imgs = train_imgs/255.
-    test_imgs = test_imgs / 255.
+    train_imgs = train_imgs
+    test_imgs = test_imgs
     # Setting models
     models = Models(n_classes = 10 , img_shape = (32,32,3))
     # Get batch xs , ys
