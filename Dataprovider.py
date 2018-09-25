@@ -74,15 +74,25 @@ class WallyDataset_ver2():
         self.bg_imgs = image_process.paths2imgs(self.bg_paths[:100] , self.resize)
         self.n_bg = len(self.bg_imgs)
 
-    def next_batch(self , fg_batchsize , bg_batchsize):
+    def next_batch(self , fg_batchsize , bg_batchsize , normalization):
         fg_indices = random.sample(range(self.n_fg) ,fg_batchsize )
         bg_indices = random.sample(range(self.n_bg) , bg_batchsize)
 
         batch_fgs =self.fg_imgs[fg_indices]
         batch_bgs = self.bg_imgs[bg_indices]
+
         batch_xs = np.vstack([batch_fgs, batch_bgs])
         batch_ys = [self.WALLY] * fg_batchsize + [self.NOT_WALLY] * bg_batchsize
         batch_ys = cls2onehot(batch_ys ,depth = 2 )
+
+        indices = random.shuffle(range(len(batch_ys)) , len(batch_ys))
+        batch_xs = batch_xs[indices]
+        batch_ys = batch_ys[indices]
+
+        if normalization:
+            batch_xs = batch_xs/255.
+
+
 
         return batch_xs ,batch_ys
 
