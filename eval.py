@@ -5,4 +5,3 @@ class Eval():
         self.image_processing = ImageProcessing()
         pass ;
     def
-        self
