@@ -23,9 +23,9 @@ if __name__ == '__main__':
     # Training
     eval=Eval()
     for step in range(cfg.max_iter):
-        batch_xs, batch_ys = dp.next_batch(fg_batchsize=30, bg_batchsize=30, normalization=False)
-        batch_xs = aug_lv3(batch_xs)
-        batch_xs = batch_xs / 255.
+        batch_xs, batch_ys = dp.next_batch(fg_batchsize=30, bg_batchsize=30, normalization=True)
+        #batch_xs = aug_lv3(batch_xs)
+        #batch_xs = batch_xs / 255.
         show_progress(step , cfg.max_iter)
         train_cost = models.training(batch_xs , batch_ys , cfg.lr)
         if step % cfg.ckpt  == 0 :
