@@ -89,7 +89,7 @@ class WallyDataset_ver2():
 
 
 if __name__ == '__main__':
-    fg_dir = 'cropped_fg/original_fg'
+    fg_dir = 'foreground/original_fg'
     bg_dir = 'background/cropped_bg'
 
     dataprovider = WallyDataset_ver2(fg_dir , bg_dir , resize = (64,64))

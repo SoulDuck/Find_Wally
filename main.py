@@ -5,7 +5,7 @@ from models import Models
 from Dataprovider import WallyDataset_ver2
 from utils import show_progress
 if __name__ == '__main__':
-    fg_dir = 'cropped_fg/original_fg'
+    fg_dir = 'foreground/original_fg'
     bg_dir = 'background/cropped_bg'
     # dp == DataProvider
     dp = WallyDataset_ver2(fg_dir, bg_dir, resize=(64, 64))
