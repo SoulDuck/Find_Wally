@@ -224,9 +224,9 @@ class WallyDataset_ver4(Wally_dataset):
 
 
     def get_wallyface(self):
-        fg_train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train')
-        fg_test_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'test')
-        fg_val_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'val')
+        fg_train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
+        fg_test_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'test.npy')
+        fg_val_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'val.npy')
 
         if os.path.exists(fg_train_savepath) and os.path.exists(fg_test_savepath) and os.path.exists(fg_val_savepath):
             self.fg_train_imgs=np.load(fg_train_savepath)
@@ -254,9 +254,9 @@ class WallyDataset_ver4(Wally_dataset):
             self.fg_train_imgs = fg_imgs[5000 * 2:]
 
             # save imgs to numpy
-            np.save(self.fg_train_imgs, fg_train_savepath)
-            np.save(self.fg_test_imgs, fg_test_savepath)
-            np.save(self.fg_val_imgs, fg_val_savepath)
+            np.save(fg_train_savepath ,self.fg_train_imgs)
+            np.save(fg_test_savepath ,self.fg_test_imgs)
+            np.save( fg_val_savepath ,self.fg_val_imgs)
 
 if __name__ == '__main__':
     face_imgdir = './Wally_ver3/face_images'
@@ -271,11 +271,21 @@ if __name__ == '__main__':
 
 
 
-    print np.shape('Wally train : {} \t validation : {}\t test : {}'.format(wally_dp.fg_train_imgs.shape()),
+    print 'Wally train : {} \t validation : {}\t test : {}'.format(wally_dp.fg_train_imgs.shape,
                                                                             wally_dp.fg_val_imgs.shape,
                                                                             wally_dp.fg_test_imgs.shape)
 
-    print np.shape('Not Wally train : {} \t validation : {}\t test : {}'.format(wally_dp.bg_train_imgs.shape,
+    print 'Not Wally train : {} \t validation : {}\t test : {}'.format(wally_dp.bg_train_imgs.shape,
                                                                                 wally_dp.bg_val_imgs.shape,
-                                                                                wally_dp.bg_test_imgs.shape))
-    #wally_dp.generate_tfrecord('Wally_ver3/tfrecords/train.tfrecord',len(fg_imgs) , fg_imgs , len(bg_imgs) , bg_imgs )
+                                                                                wally_dp.bg_test_imgs.shape)
+
+    # tfrecord files train
+    wally_dp.generate_tfrecord('Wally_ver3/tfrecords/train.tfrecord', len(wally_dp.fg_train_imgs),
+                               wally_dp.fg_train_imgs, len(wally_dp.bg_train_imgs), wally_dp.bg_train_imgs)
+    # tfrecord files test
+    wally_dp.generate_tfrecord('Wally_ver3/tfrecords/test.tfrecord', len(wally_dp.fg_test_imgs),
+                               wally_dp.fg_test_imgs, len(wally_dp.bg_test_imgs), wally_dp.bg_test_imgs)
+    # tfrecord files val
+    wally_dp.generate_tfrecord('Wally_ver3/tfrecords/val.tfrecord', len(wally_dp.fg_val_imgs),
+                               wally_dp.fg_val_imgs, len(wally_dp.bg_val_imgs), wally_dp.bg_val_imgs)
+
