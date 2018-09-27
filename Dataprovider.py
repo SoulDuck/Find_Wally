@@ -6,8 +6,6 @@ import random
 import configure as cfg
 from image_processing import ImageProcessing
 from utils import plot_images  , cls2onehot , get_names
-import matplotlib
-matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import cv2
 class DataProvider(object):
