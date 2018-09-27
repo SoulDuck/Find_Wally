@@ -16,11 +16,10 @@ if __name__ == '__main__':
     models = Models(n_classes = 2 , img_shape = (64,64,3))
     # Get batch xs , ys
 
-
     # Augmenatation
     #plot_images(batch_xs , batch_ys)
-
     # Training
+
     eval=Eval()
     for step in range(cfg.max_iter):
         batch_xs, batch_ys = dp.next_batch(fg_batchsize=30, bg_batchsize=30, normalization=True)

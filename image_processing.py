@@ -43,6 +43,8 @@ class ImageProcessing(object):
             end_y = bg_ctr_y + fg_ctr_y
 
             np_bg[start_y: end_y, start_x: end_x] = np_fg
+        elif locate == 'random':
+            raise NotImplementedError
         else:
             raise NotImplementedError
         return np_bg
@@ -78,9 +80,10 @@ class ImageProcessing(object):
             np_imgs.append(np_img)
         return np.asarray(np_imgs)
 
-    def crop_img(self, np_img, h_stride, w_stride, crop_h, crop_w):
+    def stride_cropping(self, np_img, h_stride, w_stride, crop_h, crop_w):
         ret_coords = []
         # 마지막 꼬투리는 무시합니다
+        # 해당 스트라이트 만큼 움직이면서 이미지를 cropping 합니다
         ret_imgs = []
         h, w, ch = np.shape(np_img)
         h_hops = (h - crop_h) / h_stride + 1
@@ -99,16 +102,19 @@ class ImageProcessing(object):
         return ret_imgs, ret_coords
 
 
-    def generate_copped_imgs(self, src_dir, h_stride, w_stride, crop_h, crop_w):
+    def generate_cropped_imgs(self, src_dir, h_stride, w_stride, crop_h, crop_w):
+        # 모든 이미지의 src dir 에 있는 모든 이미지를 crop 합니다
+        # '1.jpg' : { cropped_imgs , coords } 이런 형식 으로 되어 있습니다
+        # coords 형식에는 (0, 32)  0번째 행 , 32 째 열 데이터을 말하고 있습니다
+
         paths = glob.glob(os.path.join(src_dir, '*'))
 
         cropped_imgs_coords = {}
-
         for path in paths:
             name = get_name(path)
             img = np.asarray(Image.open(path).convert('RGB'))
             # Cropping Images
-            cropped_imgs, coords = self.crop_img(img, h_stride, w_stride, crop_h, crop_w)
+            cropped_imgs, coords = self.stride_cropping(img, h_stride, w_stride, crop_h, crop_w)
             cropped_imgs = np.asarray(cropped_imgs)
             cropped_imgs_coords[name] = [cropped_imgs , coords]
 
@@ -116,7 +122,8 @@ class ImageProcessing(object):
 
     def divide_TVT(self , src , ratio_val , ratio_test):
 
-        """divide source into train ,validation ,test """
+        # source 을 validation , test 비율로 나눕니다
+        #
 
         n_val = int(len(src) * ratio_val)
         n_test =  int(len(src) * ratio_test)
@@ -126,72 +133,133 @@ class ImageProcessing(object):
 
         return src_train , src_val , src_test
 
+    def crop_img(self, src_img , coordinate):
+        # src img 을 해당 coordinate 에 맞게 cropping 합니다
+        # src img 는 numpy 입니다
+        # coordinate 는 x1,y1, x2 ,y2 입니다
+        x1, y1, x2, y2=coordinate
+        return src_img[y1:y2 ,x1 :x2]
+
+    def cal_coord_include_target(self, src_img ,crop_size , target_coord):
+        # 특정 지점(target coord )이 들어가면서 해당 넓이의 이미지들이 뽑히는것
+        # target coord x1,y1,x2,y2
+        # crop size (h, w )
+        # src image np image
+        ori_h, ori_w = np.shape(src_img)[:2]
+        tx1 ,ty1 , tx2 , ty2 = target_coord
+        crop_h , crop_w = crop_size
+        ret_x1 = tx2 - crop_w
+        ret_x2 =tx1 + crop_w
+        ret_y1 =ty2 - crop_h
+        ret_y2 =ty1 + crop_h
+        # ret x1 이 0 보다 작으면 안됩니다 , y도 동일
+        # x2 가 이미지 w 보다 크면 안됩니다 . y도 동일
+        ret_x1 = max(0, ret_x1 )
+        ret_x2 = min(ori_w , ret_x2 )
+        ret_y1 = max(0, ret_y1 )
+        ret_y2 = min(ori_h , ret_y2)
+
+        return ret_x1 , ret_y1 , ret_x2 , ret_y2
+
+    def guarantee_stride_cropping( self , src_img , crop_size , target_coord , stride_size ):
+        # 특정 좌표 , target croodinate 가 있는 이미지가 cropping 하는 이미지에 있는 걸 보증합니다
+        # 그리고 특정 stride 만큰 움직이면서 모든 이미지를 cropping 합니다
+        # stride : (stride_h , stride_w)
+
+        stride_h , stride_w= stride_size
+        crop_h , crop_w = crop_size
+        tx1 , ty1 , tx2 , ty2 = self.cal_coord_include_target(src_img , crop_size , target_coord)
+        cropped_img = self.crop_img(src_img , coordinate= (tx1 , ty1 , tx2 , ty2))
+        cropped_imgs , coords = self.stride_cropping(cropped_img , stride_h , stride_w ,crop_h , crop_w )
+
+        return cropped_imgs , coords
+
+    def make_tfrecord(self, tfrecord_path, resize ,*args ):
+        """
+
+        usage : (n_imgs , imgs ) ,
+        img source 에는 두가지 형태로 존재합니다 . str type 의 path 와
+        numpy 형태의 list 입니다.
+        :param tfrecord_path: e.g) './tmp.tfrecord'
+        :param img_sources: e.g)[./pic1.png , ./pic2.png] or list flatted_imgs
+        img_sources could be string , or numpy
+        :param labels: 3.g) [1,1,1,1,1,0,0,0,0]
+        :return:
+        """
+        if os.path.exists(tfrecord_path):
+            print tfrecord_path + 'is exists'
+            return
+        def _bytes_feature(value):
+            return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+        def _int64_feature(value):
+            return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
+        writer = tf.python_io.TFRecordWriter(tfrecord_path)
+        flag=True
+        n_total =0
+        counts = []
+        for i,arg in enumerate(args):
+            print 'Label :{} , # : {} '.format(i , arg[0])
+            n_total += arg[0]
+            counts.append(0)
+
+        while(flag):
+            label=random.randint(0,len(args)-1)
+            n_max = args[label][0]
+            if counts[label] < n_max:
+                imgs = args[label][1]
+                n_imgs = len(args[label][1])
+                ind = counts[label] % n_imgs
+                np_img = imgs[ind]
+                counts[label] += 1
+            elif np.sum(np.asarray(counts)) ==  n_total:
+                for i, count in enumerate(counts):
+                    print 'Label : {} , # : {} '.format(i, count )
+                flag = False
+            else:
+                continue;
+
+            height, width = np.shape(np_img)[:2]
+
+            msg = '\r-Progress : {0}'.format(str(np.sum(np.asarray(counts))) + '/' + str(n_total))
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            if not resize is None:
+                np_img = np.asarray(Image.fromarray(np_img).resize(resize, Image.ANTIALIAS))
+            raw_img = np_img.tostring()  # ** Image to String **
+            example = tf.train.Example(features=tf.train.Features(feature={
+                'height': _int64_feature(height),
+                'width': _int64_feature(width),
+                'raw_image': _bytes_feature(raw_img),
+                'label': _int64_feature(label),
+                'filename': _bytes_feature(tf.compat.as_bytes(str(ind)))
+            }))
+            writer.write(example.SerializeToString())
+        writer.close()
+    def generate_bg(self, src_dir , h_stride, w_stride, crop_h, crop_w, save_dir ):
+        """
+        stride_cropping
+        Usage :
+            img=Image.open('waldo_world.png').convert('RGB')
+        np_img = np.asarray(img)
+        #imgs , coords = crop_img(np_img , 32,32,64,64)
+        src_dir ='./background/original_bg'
+        save_dir = './background/cropped_bg'
+        generate_bg(src_dir , 64, 64, 64, 64 , save_dir)
 
 
-
-def make_tfrecord(tfrecord_path, resize ,*args ):
-    """
-    img source 에는 두가지 형태로 존재합니다 . str type 의 path 와
-    numpy 형태의 list 입니다.
-    :param tfrecord_path: e.g) './tmp.tfrecord'
-    :param img_sources: e.g)[./pic1.png , ./pic2.png] or list flatted_imgs
-    img_sources could be string , or numpy
-    :param labels: 3.g) [1,1,1,1,1,0,0,0,0]
-    :return:
-    """
-    if os.path.exists(tfrecord_path):
-        print tfrecord_path + 'is exists'
-        return
-    def _bytes_feature(value):
-        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
-
-    def _int64_feature(value):
-        return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
-
-    writer = tf.python_io.TFRecordWriter(tfrecord_path)
-
-    flag=True
-    n_total =0
-    counts = []
-    for i,arg in enumerate(args):
-        print 'Label :{} , # : {} '.format(i , arg[0])
-        n_total += arg[0]
-        counts.append(0)
-
-    while(flag):
-        label=random.randint(0,len(args)-1)
-        n_max = args[label][0]
-        if counts[label] < n_max:
-            imgs = args[label][1]
-            n_imgs = len(args[label][1])
-            ind = counts[label] % n_imgs
-            np_img = imgs[ind]
-            counts[label] += 1
-        elif np.sum(np.asarray(counts)) ==  n_total:
-            for i, count in enumerate(counts):
-                print 'Label : {} , # : {} '.format(i, count )
-            flag = False
-        else:
-            continue;
-
-        height, width = np.shape(np_img)[:2]
-
-        msg = '\r-Progress : {0}'.format(str(np.sum(np.asarray(counts))) + '/' + str(n_total))
-        sys.stdout.write(msg)
-        sys.stdout.flush()
-        if not resize is None:
-            np_img = np.asarray(Image.fromarray(np_img).resize(resize, Image.ANTIALIAS))
-        raw_img = np_img.tostring()  # ** Image to String **
-        example = tf.train.Example(features=tf.train.Features(feature={
-            'height': _int64_feature(height),
-            'width': _int64_feature(width),
-            'raw_image': _bytes_feature(raw_img),
-            'label': _int64_feature(label),
-            'filename': _bytes_feature(tf.compat.as_bytes(str(ind)))
-        }))
-        writer.write(example.SerializeToString())
-    writer.close()
-
+        :return:
+        """
+        paths = glob.glob(os.path.join(src_dir  , '*'))
+        for path in paths:
+            name =os.path.splitext(os.path.split(path)[-1])[0]
+            img = np.asarray(Image.open(path).convert('RGB'))
+            # Cropping Image
+            cropped_imgs , coords =self.stride_cropping(img,h_stride, w_stride, crop_h, crop_w)
+            cropped_imgs = np.asarray(cropped_imgs)
+            for i , cropped_img in enumerate(cropped_imgs ):
+                Image.fromarray(cropped_img).save(os.path.join( save_dir, '{}_{}.jpg'.format(name , i)))
 
 
 if __name__ == '__main__':
@@ -209,12 +277,11 @@ if __name__ == '__main__':
     np.save('fg_train.npy' , fg_train_imgs)
     np.save('fg_test.npy', fg_test_imgs)
     np.save('fg_val.npy', fg_val_imgs)
-
-
     # Background
     paths = np.asarray(glob.glob(os.path.join('background', 'cropped_bg', '*')))
     names = np.asarray(get_names(paths))
     indices = random.sample(range(len(paths)) , len(paths))[:7400]
+    #
     paths = paths[indices]
     names = names[indices]
     imgs = img_processing.paths2imgs(paths, (64, 64))
@@ -224,8 +291,6 @@ if __name__ == '__main__':
     np.save('bg_train.npy', bg_train_imgs)
     np.save('bg_test.npy', bg_test_imgs)
     np.save('bg_val.npy', bg_val_imgs)
-
-
     #Make Tensorflow tfrecords
     """
     usage :    make_tfrecord(train_tfrecord_path, None, (len(label_0_train), label_0_train), (len(label_0_train), label_1_train),
@@ -235,16 +300,16 @@ if __name__ == '__main__':
     n_train = len(bg_train_imgs)
     n_test = len(bg_test_imgs)
     n_val = len(bg_val_imgs)
-    make_tfrecord('train.tfrecord' , (64,64) , (n_train , fg_train_imgs) , (n_train , bg_train_imgs))
-    make_tfrecord('test.tfrecord', (64, 64), (n_test, fg_train_imgs), (n_test, bg_train_imgs))
-    make_tfrecord('val.tfrecord', (64, 64), (n_val, fg_train_imgs), (n_val, bg_train_imgs))
-    #
 
+    img_processing.make_tfrecord('train.tfrecord' , (64,64) , (n_train , fg_train_imgs) , (n_train , bg_train_imgs))
+    img_processing.make_tfrecord('test.tfrecord', (64, 64), (n_test, fg_train_imgs), (n_test, bg_train_imgs))
+    img_processing.make_tfrecord('val.tfrecord', (64, 64), (n_val, fg_train_imgs), (n_val, bg_train_imgs))
+    #
     padded_imgs = img_processing.rect2square_imgs(list(imgs))
     padded_imgs = np.asarray(padded_imgs) / 255.
     #
-    imgs_coords = img_processing.generate_copped_imgs('test_imgs' ,  32, 32 ,64, 64)
-
+    imgs_coords = img_processing.generate_cropped_imgs('test_imgs' ,  32, 32 ,64, 64)
+    #
     print imgs_coords.keys()
     for key in imgs_coords.keys()[:]:
         imgs, coords = imgs_coords[key]
@@ -254,34 +319,5 @@ if __name__ == '__main__':
         coords_indices = zip(coords , range(len(coords)))
         print np.shape(imgs)
         for i in range(50):
-
             plot_images(imgs[40*i:40*(i+1)] ,coords_indices[40*i:40*(i+1)])
-
-
-    # [1,33](73) ,[1,32](72) 1.png
-    # [13,43](875) [13,42](874) 3.png
-    # [3,20](146) [3,21](147)    2.png
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

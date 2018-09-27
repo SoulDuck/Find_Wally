@@ -55,14 +55,8 @@ def generate_bg(src_dir , h_stride, w_stride, crop_h, crop_w, save_dir ):
         # Cropping Image
         cropped_imgs , coords =crop_img(img,h_stride, w_stride, crop_h, crop_w)
         cropped_imgs = np.asarray(cropped_imgs)
-
         for i , cropped_img in enumerate(cropped_imgs ):
             Image.fromarray(cropped_img).save(os.path.join( save_dir, '{}_{}.jpg'.format(name , i)))
-
-
-
-
-
 
 if __name__ == '__main__':
     img=Image.open('waldo_world.png').convert('RGB')
