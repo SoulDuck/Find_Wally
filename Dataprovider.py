@@ -224,9 +224,9 @@ class WallyDataset_ver4(Wally_dataset):
 
 
     def get_wallyface(self):
-        fg_train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
-        fg_test_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'test.npy')
-        fg_val_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'val.npy')
+        fg_train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'fg_train.npy')
+        fg_test_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'fg_test.npy')
+        fg_val_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'fg_val.npy')
 
         if os.path.exists(fg_train_savepath) and os.path.exists(fg_test_savepath) and os.path.exists(fg_val_savepath):
             self.fg_train_imgs=np.load(fg_train_savepath)
@@ -257,6 +257,14 @@ class WallyDataset_ver4(Wally_dataset):
             np.save(fg_train_savepath ,self.fg_train_imgs)
             np.save(fg_test_savepath ,self.fg_test_imgs)
             np.save( fg_val_savepath ,self.fg_val_imgs)
+    def get_train(self):
+        imgs = np.vstack([self.fg_train_imgs ,self.bg_train_imgs ])
+        train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
+        np.save(train_savepath , self.fg_train_imgs)
+
+
+
+
 
 if __name__ == '__main__':
     face_imgdir = './Wally_ver3/face_images'
