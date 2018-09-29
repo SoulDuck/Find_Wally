@@ -259,9 +259,11 @@ class WallyDataset_ver4(Wally_dataset):
             np.save( fg_val_savepath ,self.fg_val_imgs)
     def get_train(self):
         imgs = np.vstack([self.fg_train_imgs ,self.bg_train_imgs ])
-        labs = [0]*len(self.fg_train_imgs) + [1]*len(self.bg_train_imgs)
-        train_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
-        np.save(train_savepath , self.fg_train_imgs)
+        labs = np.asarray([0]*len(self.fg_train_imgs) + [1]*len(self.bg_train_imgs))
+        trainImgs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
+        trainLabs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
+        np.save(trainImgs_savepath , imgs )
+        np.save(trainLabs_savepath, labs)
 
 
 
@@ -276,6 +278,7 @@ if __name__ == '__main__':
     wally_dp.get_background_imgs(50000 , savedir='Wally_ver3/numpy_imgs')
     # Get foreground images
     wally_dp.get_wallyface()
+    wally_dp.get_train()
 
 
 
