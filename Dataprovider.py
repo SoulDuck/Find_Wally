@@ -260,8 +260,8 @@ class WallyDataset_ver4(Wally_dataset):
     def get_train(self):
         imgs = np.vstack([self.fg_train_imgs ,self.bg_train_imgs ])
         labs = np.asarray([0]*len(self.fg_train_imgs) + [1]*len(self.bg_train_imgs))
-        trainImgs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
-        trainLabs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train.npy')
+        trainImgs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train_imgs.npy')
+        trainLabs_savepath = os.path.join('Wally_ver3', 'numpy_imgs', 'train_labs.npy')
         np.save(trainImgs_savepath , imgs )
         np.save(trainLabs_savepath, labs)
 
