@@ -272,7 +272,7 @@ if __name__ == '__main__':
     trainXs_list = []
     trainYs_list = []
 
-    utils.plot_images(train_xs , train_ys )
+    #utils.plot_images(train_xs , train_ys )
     max_iter = 2
     for i in range(max_iter):
         utils.show_progress(i , max_iter)
