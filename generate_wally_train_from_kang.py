@@ -265,12 +265,12 @@ if __name__ == '__main__':
                                      convolution=True)
 
 
-
+    """
     # EveryNN 에 넣기 위해서..
     train_xs, train_ys = next(train_generator)
     trainXs_list = []
     trainYs_list = []
-
+    
     #utils.plot_images(train_xs , train_ys )
     max_iter = 500
     for i in range(max_iter):
@@ -299,10 +299,12 @@ if __name__ == '__main__':
 
     assert len(wally_train_xs) + len(notwally_train_xs) == len(train_xs)
 
-    img_prc=ImageProcessing()
+    img_prc = ImageProcessing()
     img_prc.make_tfrecord('wally_train.tfrecord', (48,48), (len(notwally_train_xs), notwally_train_xs),
                           (len(wally_train_xs), wally_train_xs))
+    """
 
+    img_prc = ImageProcessing()
     valid_x, valid_y = next(valid_generator)
     valid_y =np.squeeze(valid_y )
     valid_y = np.argmax(valid_y , axis =1 )
@@ -311,11 +313,14 @@ if __name__ == '__main__':
     valid_x = (valid_x * 255).astype(np.uint8)
     wally_imgs = valid_x[Wally_indices ]
     notWally_imgs = valid_x[notWally_indices]
+
     print 'wally imgs shape : {} not wally imgs shape : {}'.format(np.shape(wally_imgs) , np.shape(notWally_imgs))
-    img_prc.make_tfrecord('wally_val.tfrecord', (48,48), (len(notWally_imgs), notWally_imgs),
-                            (len(wally_imgs), wally_imgs))
-    img_prc.make_tfrecord('wally_test.tfrecord', (48, 48), (len(notWally_imgs), notWally_imgs),
-                          (len(wally_imgs), wally_imgs))
+    img_prc.make_tfrecord('wally_val.tfrecord', (48,48),
+                            (len(wally_imgs), wally_imgs),
+                          (len(notWally_imgs), notWally_imgs))
+    img_prc.make_tfrecord('wally_test.tfrecord', (48, 48),
+                          (len(wally_imgs), wally_imgs),
+                          (len(notWally_imgs), notWally_imgs),)
 
 
 
