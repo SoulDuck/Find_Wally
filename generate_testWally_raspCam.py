@@ -1,15 +1,18 @@
 from image_processing import ImageProcessing
 import numpy as np
+import os
 import utils
 img_prc = ImageProcessing()
-imgs_coords = img_prc.generate_cropped_imgs('/Users/seongjungkim/PycharmProjects/Find_Wally/wally_raspCam' , 24,24,48,48)
+wally_testdir = './wally_raspCam'
+imgs_coords = img_prc.generate_cropped_imgs(wally_testdir , 24,24,48,48)
 
 
 for key in imgs_coords:
     imgs , coord =imgs_coords[key]
-    print np.shape(imgs)
-    utils.plot_images(imgs[:100])
-    exit()
+    print np.save(file = os.path.join(wally_testdir , key.replace('.jpg' , '.npy')), arr = imgs )
+
+
+
 
 
 
