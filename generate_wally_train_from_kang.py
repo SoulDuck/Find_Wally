@@ -300,8 +300,9 @@ if __name__ == '__main__':
     assert len(wally_train_xs) + len(notwally_train_xs) == len(train_xs)
 
     img_prc = ImageProcessing()
-    img_prc.make_tfrecord('wally_train.tfrecord', (48,48), (len(notwally_train_xs), notwally_train_xs),
-                          (len(wally_train_xs), wally_train_xs))
+    img_prc.make_tfrecord('wally_train.tfrecord', (48,48), 
+                          (len(wally_train_xs), wally_train_xs),
+                          (len(notwally_train_xs), notwally_train_xs))
     """
 
     img_prc = ImageProcessing()
