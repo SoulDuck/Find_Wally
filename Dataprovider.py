@@ -11,9 +11,6 @@ import cv2
 class DataProvider(object):
     def __init__(self):
         pass;
-
-
-
 class Wally_dataset(object):
     def __init__(self):
         self.img_prc=ImageProcessing
@@ -43,6 +40,7 @@ class Wally_dataset(object):
             np.save(os.path.join(savedir,'bg_train.npy'), self.bg_train_imgs)
             np.save(os.path.join(savedir,'bg_test.npy'), self.bg_test_imgs)
             np.save(os.path.join(savedir,'bg_val.npy'), self.bg_val_imgs)
+
 
 
 
