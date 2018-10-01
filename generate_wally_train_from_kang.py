@@ -14,7 +14,7 @@ from skimage.exposure import adjust_gamma
 from sklearn.model_selection import train_test_split
 
 import random
-
+from image_processing import ImageProcessing
 
 def load_dataset(h5_path="./prep.h5"):
     with h5py.File(h5_path) as file:
@@ -271,8 +271,9 @@ if __name__ == '__main__':
 
     trainXs_list = []
     trainYs_list = []
-    #utils.plot_images(train_fg[:40])
-    max_iter = 2000
+
+    utils.plot_images(train_xs , train_ys )
+    max_iter = 2
     for i in range(max_iter):
         utils.show_progress(i , max_iter)
         train_xs, train_ys = next(train_generator)
@@ -282,6 +283,22 @@ if __name__ == '__main__':
     trainYs_list = np.squeeze(trainYs_list)
     np.save('train_imgs.npy' , train_xs)
     np.save('train_labs.npy' , train_ys)
+
+
+
+
+    train_cls = np.argmax(train_ys , axis=1)
+    notwally_indices = np.where([train_cls == 0])[1]
+    wally_indices =  np.where([train_cls == 1])[1]
+
+    wally_train_xs = train_xs[wally_indices]
+    notwally_train_xs = train_xs[notwally_indices]
+
+    assert len(wally_train_xs) + len(notwally_train_xs) == len(train_xs)
+
+    img_prc=ImageProcessing()
+    img_prc.make_tfrecord('wally.tfrecord', (48,48), (len(wally_train_xs), wally_train_xs),
+                          (len(notwally_train_xs), notwally_train_xs))
 
 
 
