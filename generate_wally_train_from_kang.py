@@ -280,16 +280,20 @@ if __name__ == '__main__':
         trainXs_list.append(train_xs)
         trainYs_list.append(train_ys)
 
-    trainYs_list = np.squeeze(trainYs_list)
+    trainYs_list= np.squeeze(trainYs_list)
+    train_xs  = np.vstack(trainXs_list)
+    train_ys = np.vstack(trainYs_list)
+    print 'Xs shape : {} \t Ys shape : {}'.format(np.shape(train_xs) , np.shape(train_ys))
     np.save('train_imgs.npy' , train_xs)
     np.save('train_labs.npy' , train_ys)
 
-
-
-
     train_cls = np.argmax(train_ys , axis=1)
+    print train_cls
     notwally_indices = np.where([train_cls == 0])[1]
     wally_indices =  np.where([train_cls == 1])[1]
+
+    train_xs=train_xs*255
+    train_xs=train_xs.astype(np.uint8)
 
     wally_train_xs = train_xs[wally_indices]
     notwally_train_xs = train_xs[notwally_indices]
