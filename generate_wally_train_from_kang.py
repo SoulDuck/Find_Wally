@@ -272,7 +272,9 @@ if __name__ == '__main__':
     trainXs_list = []
     trainYs_list = []
     #utils.plot_images(train_fg[:40])
-    for i in range(2000):
+    max_iter = 2000
+    for i in range(max_iter):
+        utils.show_progress(i , max_iter)
         train_xs, train_ys = next(train_generator)
         trainXs_list.append(train_xs)
         trainYs_list.append(train_ys)
