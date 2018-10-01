@@ -233,19 +233,19 @@ if __name__ == '__main__':
     fg, bg = load_dataset()
     # data augumentation list
     aug_funcs = [rotation_func(min_angle=-8,max_angle=8),
-    rescaling_func(scale=0.2),
-    flip_func(),
-    random_crop_func(crop_dim=(51,51)),
-    random_noise_func(),
-    gamma_func(),
-    color_gamma_func(),
-    hue_func(max_gamma=1.3),
-    saturation_func(min_gamma=0.9,max_gamma=1.3)]
+                 rescaling_func(scale=0.2),
+                 flip_func(),
+                 random_crop_func(crop_dim=(51,51)),
+                 random_noise_func(),
+                 gamma_func(),
+                 color_gamma_func(),
+                 hue_func(max_gamma=1.3),
+                 saturation_func(min_gamma=0.9,max_gamma=1.3)]
 
     valid_funcs = [rotation_func(min_angle=-8,max_angle=8),
-    rescaling_func(scale=0.2),
-    flip_func(),
-    random_crop_func(crop_dim=(51,51))]
+                   rescaling_func(scale=0.2),
+                   flip_func(),
+                   random_crop_func(crop_dim=(51,51))]
 
     train_fg, valid_fg = train_test_split(fg,test_size=0.2)
     train_bg, valid_bg = train_test_split(bg,test_size=0.2)
@@ -257,7 +257,29 @@ if __name__ == '__main__':
                                      aug_funcs=valid_funcs,
                                      convolution=True)
 
+    train_generator = willyGenerator(train_fg, train_bg,
+                                     crop_dim=(48, 48, 3),
+                                     fg_ratio=0.5,
+                                     batch_size=60,
+                                     aug_funcs=aug_funcs,
+                                     convolution=True)
+
     valid_x, valid_y = next(valid_generator)
 
+    # EveryNN 에 넣기 위해서..
+    train_xs, train_ys = next(train_generator)
 
-    utils.plot_images(train_fg[:40])
+    trainXs_list = []
+    trainYs_list = []
+    #utils.plot_images(train_fg[:40])
+    for i in range(2000):
+        train_xs, train_ys = next(train_generator)
+        trainXs_list.append(train_xs)
+        trainYs_list.append(train_ys)
+
+    trainYs_list = np.squeeze(trainYs_list)
+    np.save('train_imgs.npy' , train_xs)
+    np.save('train_labs.npy' , train_ys)
+
+
+
