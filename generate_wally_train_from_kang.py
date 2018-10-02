@@ -344,6 +344,7 @@ if __name__ == '__main__':
         y2 = row.y2
 
         print 'x1 : {} , y1 : {} , x2 : {} , y2 : {} , w : {} , h : {}'.format(x1,y1,x2,y2 ,x2 -x1 ,y2 - y1)
+
         img_path=os.path.join(imgdir , img_name)
         np_img = np.asarray(Image.open(img_path).convert("RGB"))
 
@@ -353,6 +354,7 @@ if __name__ == '__main__':
                                                             (x1,y1,x2,y2),
                                                             stride_size=(10, 10))
         if len(fg_imgs) ==0:
+            print filename
             continue;
         #2
         cv2.rectangle(np_img , (x1 , y1)  ,(x2  ,y2) , (0,0,0) ,-1 )
