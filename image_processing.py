@@ -9,6 +9,7 @@ import random
 import tensorflow as tf
 import sys
 
+
 class ImageProcessing(object):
     def __init__(self):
         pass;
@@ -263,6 +264,8 @@ class ImageProcessing(object):
 
 
 if __name__ == '__main__':
+
+
 
     paths = glob.glob(os.path.join('foreground','original_fg' , '*'))
     names = get_names(paths)

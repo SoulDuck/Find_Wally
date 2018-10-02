@@ -2,12 +2,12 @@
 # 강상재 쌤이 만들어 주신 데이터 셋
 
 import os
-
 import utils
 import h5py
 import numpy as np
 import cv2
-
+import pandas as pd
+from PIL import Image
 from skimage.transform import rescale, rotate
 from skimage.util import random_noise
 from skimage.exposure import adjust_gamma
@@ -305,6 +305,7 @@ if __name__ == '__main__':
                           (len(notwally_train_xs), notwally_train_xs))
     """
 
+    """
     img_prc = ImageProcessing()
     valid_x, valid_y = next(valid_generator)
     valid_y =np.squeeze(valid_y )
@@ -315,6 +316,8 @@ if __name__ == '__main__':
     wally_imgs = valid_x[Wally_indices ]
     notWally_imgs = valid_x[notWally_indices]
 
+    np.save('val_imgs.npy' ,  valid_x)
+
     print 'wally imgs shape : {} not wally imgs shape : {}'.format(np.shape(wally_imgs) , np.shape(notWally_imgs))
     img_prc.make_tfrecord('wally_val.tfrecord', (48,48),
                             (len(wally_imgs), wally_imgs),
@@ -322,6 +325,59 @@ if __name__ == '__main__':
     img_prc.make_tfrecord('wally_test.tfrecord', (48, 48),
                           (len(wally_imgs), wally_imgs),
                           (len(notWally_imgs), notWally_imgs),)
+    """
+
+    from image_processing import ImageProcessing
+    img_prc = ImageProcessing()
+    imgdir = './wally_raspCam'
+    img_name = 'wally_1_1.jpg'
+
+    df = pd.read_csv('whole_bbox.csv')
+    df.loc[:, ["x1", "y1", "x2", "y2"]] = df.loc[:,["x1","y1","x2","y2"]].astype(np.int)
+    fg_list = []
+    bg_list = []
+    for idx, row in df.iterrows():
+        filename = row.filename
+        print filename
+        x1 = row.x1
+        y1 = row.y1
+        x2 = row.x2
+        y2 = row.y2
+
+        print 'x1 : {} , y1 : {} , x2 : {} , y2 : {} , w : {} , h : {}'.format(x1,y1,x2,y2 ,x2 -x1 ,y2 - y1)
+        img_path=os.path.join(imgdir , img_name)
+        np_img = np.asarray(Image.open(img_path).convert("RGB"))
+
+
+        #1
+        fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
+                                                            (x1,y1,x2,y2),
+                                                            stride_size=(10, 10))
+        if len(fg_imgs) ==0:
+            continue;
+        #2
+        cv2.rectangle(np_img , (x1 , y1)  ,(x2  ,y2) , (0,0,0) ,-1 )
+        bg_imgs , coords = img_prc.stride_cropping(np_img , 200 , 200 ,400,400 )
+
+        fg_list.append(fg_imgs)
+        bg_list.append(bg_imgs)
+        print np.shape(fg_imgs)
+        print np.shape(bg_imgs)
+    fg_imgs = np.vstack(fg_list)
+    bg_imgs = np.vstack(bg_list)
+
+    np.save('wally_raspCam_np/{}_fg.npy'.format(os.path.splitext(filename)[0]), fg_imgs)
+    np.save('wally_raspCam_np/{}_bg.npy'.format(os.path.splitext(filename)[0]), bg_imgs)
+
+
+
+
+
+
+
+
+
+
 
 
 
