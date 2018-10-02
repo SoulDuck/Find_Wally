@@ -367,9 +367,13 @@ if __name__ == '__main__':
     bg_imgs = np.vstack(bg_list)
 
     np.save('wally_raspCam_np/{}_fg.npy'.format(os.path.splitext(filename)[0]), fg_imgs)
+    fg_labs = [0]*len(fg_imgs)
     np.save('wally_raspCam_np/{}_bg.npy'.format(os.path.splitext(filename)[0]), bg_imgs)
-
-
+    bg_labs = [1]*len(bg_imgs)
+    imgs = np.vstack([fg_imgs , bg_imgs])
+    labs = np.asarray(fg_labs + bg_labs)
+    np.save('wally_raspCam_np/train_imgs.npy', imgs)
+    np.save('wally_raspCam_np/train_labs.npy', labs)
 
 
 
