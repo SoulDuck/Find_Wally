@@ -2,7 +2,6 @@
 # 강상재 쌤이 만들어 주신 데이터 셋
 
 import os
-import utils
 import h5py
 import numpy as np
 import cv2
