@@ -337,7 +337,6 @@ if __name__ == '__main__':
     bg_list = []
     for idx, row in df.iterrows():
         filename = row.filename
-        print filename
         x1 = row.x1
         y1 = row.y1
         x2 = row.x2
@@ -362,8 +361,6 @@ if __name__ == '__main__':
 
         fg_list.append(fg_imgs)
         bg_list.append(bg_imgs)
-        print np.shape(fg_imgs)
-        print np.shape(bg_imgs)
     fg_imgs = np.vstack(fg_list)
     bg_imgs = np.vstack(bg_list)
 
