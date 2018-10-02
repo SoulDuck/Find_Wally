@@ -326,6 +326,7 @@ if __name__ == '__main__':
                           (len(notWally_imgs), notWally_imgs),)
     """
 
+    """
     from image_processing import ImageProcessing
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
@@ -352,6 +353,8 @@ if __name__ == '__main__':
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
                                                             stride_size=(10, 10))
+
+
         if len(fg_imgs) ==0:
             print filename
             continue;
@@ -372,6 +375,27 @@ if __name__ == '__main__':
     labs = np.asarray(fg_labs + bg_labs)
     np.save('wally_raspCam_np/train_imgs.npy', imgs)
     np.save('wally_raspCam_np/train_labs.npy', labs)
+    # tfrecords
+
+    img_prc.make_tfrecord('wally_raspCam_np/train_tfrecords.npy', (400, 400), (len(bg_imgs), fg_imgs),
+                          (len(bg_imgs),bg_imgs))
+    """
+    img_prc = ImageProcessing()
+    import utils
+    for i in [10,11]: #[3,10,11]:
+        imgdir = './wally_raspCam'
+        img_name = 'wally_1_{}.jpg'.format(i)
+        print img_name
+        imgs = np.asarray(Image.open(os.path.join(imgdir, img_name)))
+        bg_imgs, coords = img_prc.stride_cropping(imgs, 200, 200, 400, 400)
+        utils.plot_images(bg_imgs[:60] , range(60))
+        utils.plot_images(bg_imgs[60:120] ,range(60,120))
+        utils.plot_images(bg_imgs[120:165] ,range(120,165) )
+
+
+
+
+
 
 
 
