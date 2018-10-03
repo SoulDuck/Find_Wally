@@ -5,6 +5,7 @@ import os
 import h5py
 import numpy as np
 import cv2
+import utils
 import pandas as pd
 from PIL import Image
 from skimage.transform import rescale, rotate
@@ -326,8 +327,8 @@ if __name__ == '__main__':
                           (len(notWally_imgs), notWally_imgs),)
     """
 
-
     from image_processing import ImageProcessing
+    import matplotlib.pyplot as plt
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
     img_name = 'wally_1_1.jpg'
@@ -345,16 +346,19 @@ if __name__ == '__main__':
 
         print 'x1 : {} , y1 : {} , x2 : {} , y2 : {} , w : {} , h : {}'.format(x1,y1,x2,y2 ,x2 -x1 ,y2 - y1)
 
-        img_path=os.path.join(imgdir , img_name)
+        img_path=os.path.join(imgdir , filename)
         np_img = np.asarray(Image.open(img_path).convert("RGB"))
+        print img_path
+        plt.imshow(np_img)
+        plt.show()
 
 
         #1
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
-                                                            stride_size=(10, 10))
+                                                            stride_size=(400, 400))
 
-
+        utils.plot_images(fg_imgs)
         if len(fg_imgs) ==0:
             print filename
             continue;
@@ -366,6 +370,9 @@ if __name__ == '__main__':
         bg_list.append(bg_imgs)
     fg_imgs = np.vstack(fg_list)
     bg_imgs = np.vstack(bg_list)
+
+
+
 
     np.save('wally_raspCam_np/{}_fg.npy'.format(os.path.splitext(filename)[0]), fg_imgs)
     fg_labs = [0]*len(fg_imgs)
@@ -385,6 +392,7 @@ if __name__ == '__main__':
     # 10 140 ,141 
     # 11 151 
     """
+
     fg_list = []
     bg_list = []
     img_prc = ImageProcessing()
@@ -410,7 +418,8 @@ if __name__ == '__main__':
 
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
-
+    utils.plot_images(fg_imgs)
+    exit()
     np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
     np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
 
