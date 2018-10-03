@@ -326,7 +326,7 @@ if __name__ == '__main__':
                           (len(notWally_imgs), notWally_imgs),)
     """
 
-    """
+
     from image_processing import ImageProcessing
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
@@ -377,9 +377,8 @@ if __name__ == '__main__':
     np.save('wally_raspCam_np/train_labs.npy', labs)
     # tfrecords
 
-    img_prc.make_tfrecord('wally_raspCam_np/train_tfrecords.npy', (400, 400), (len(bg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecords', (400, 400), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs),bg_imgs))
-    """
 
     """
     Test Generator 
