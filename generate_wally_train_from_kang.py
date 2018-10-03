@@ -380,18 +380,48 @@ if __name__ == '__main__':
     img_prc.make_tfrecord('wally_raspCam_np/train_tfrecords.npy', (400, 400), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs),bg_imgs))
     """
-    img_prc = ImageProcessing()
-    import utils
-    for i in [10,11]: #[3,10,11]:
-        imgdir = './wally_raspCam'
-        img_name = 'wally_1_{}.jpg'.format(i)
-        print img_name
-        imgs = np.asarray(Image.open(os.path.join(imgdir, img_name)))
-        bg_imgs, coords = img_prc.stride_cropping(imgs, 200, 200, 400, 400)
-        utils.plot_images(bg_imgs[:60] , range(60))
-        utils.plot_images(bg_imgs[60:120] ,range(60,120))
-        utils.plot_images(bg_imgs[120:165] ,range(120,165) )
 
+    """
+    Test Generator 
+    # 3 . 101 , 102 
+    # 10 140 ,141 
+    # 11 151 
+    """
+    fg_list = []
+    bg_list = []
+    img_prc = ImageProcessing()
+    imgdir = './wally_raspCam'
+    img_name = 'wally_1_3.jpg'
+    np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
+    cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
+    fg_imgs_0 =cropped_imgs[101:103]
+    bg_imgs_0 =np.vstack([cropped_imgs[:101] , cropped_imgs[103:]])
+
+
+    img_name = 'wally_1_10.jpg'
+    np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
+    cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
+    fg_imgs_1 =cropped_imgs[140:142]
+    bg_imgs_1 =np.vstack([cropped_imgs[:140] , cropped_imgs[142:]])
+
+    img_name = 'wally_1_11.jpg'
+    np_img = np.asarray(Image.open(os.path.join(imgdir, img_name)))
+    cropped_imgs, coords = img_prc.stride_cropping(np_img, 200, 200, 400, 400)
+    fg_imgs_2 = cropped_imgs[151:152]
+    bg_imgs_2 = np.vstack([cropped_imgs[:151], cropped_imgs[152:]])
+
+
+
+    fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
+    bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
+
+    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (400, 400), (len(fg_imgs), fg_imgs),
+                          (len(bg_imgs), bg_imgs))
+    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(fg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
+
+
+    import utils
+    utils.plot_images(fg_imgs)
 
 
 
