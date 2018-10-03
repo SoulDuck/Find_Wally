@@ -414,9 +414,9 @@ if __name__ == '__main__':
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
 
-    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (400, 400), (len(fg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (400, 400), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs), bg_imgs))
-    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(fg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
+    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
 
 
 
