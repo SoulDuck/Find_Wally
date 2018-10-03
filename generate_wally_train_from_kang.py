@@ -376,8 +376,7 @@ if __name__ == '__main__':
     np.save('wally_raspCam_np/train_imgs.npy', imgs)
     np.save('wally_raspCam_np/train_labs.npy', labs)
     # tfrecords
-
-    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecord',(200,  200), (len(bg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecord',(32,  32), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs),bg_imgs))
 
     """
@@ -390,12 +389,12 @@ if __name__ == '__main__':
     bg_list = []
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
+
     img_name = 'wally_1_3.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
     cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
     fg_imgs_0 =cropped_imgs[101:103]
     bg_imgs_0 =np.vstack([cropped_imgs[:101] , cropped_imgs[103:]])
-
 
     img_name = 'wally_1_10.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
@@ -409,30 +408,12 @@ if __name__ == '__main__':
     fg_imgs_2 = cropped_imgs[151:152]
     bg_imgs_2 = np.vstack([cropped_imgs[:151], cropped_imgs[152:]])
 
-
-
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
 
     np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
     np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
 
-    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (200, 200), (len(bg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (32, 32), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs), bg_imgs))
-    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (200, 200), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (32, 32), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
