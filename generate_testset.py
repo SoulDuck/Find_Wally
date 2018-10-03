@@ -27,7 +27,7 @@ tmp_dict = {'second' : sec_paths , 'thrid' : trd_paths}
 for key in tmp_dict:
 
     paths = tmp_dict[key]
-    save_dir = os.path.join(root_save_dir, 'second')
+    save_dir = os.path.join(root_save_dir, key)
     utils.makedir(save_dir)
     for ind,path in enumerate(paths) :
         utils.show_progress(ind , len(paths))
