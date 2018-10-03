@@ -22,10 +22,8 @@ trd_paths = glob.glob(os.path.join(thrid_dir , '*.jpg'))
 
 assert len(sec_paths) != 0 and len(trd_paths) != 0
 
-
 tmp_dict = {'second' : sec_paths , 'thrid' : trd_paths}
 for key in tmp_dict:
-
     paths = tmp_dict[key]
     save_dir = os.path.join(root_save_dir, key)
     utils.makedir(save_dir)
@@ -37,4 +35,3 @@ for key in tmp_dict:
         imgs = img_prc.stride_cropping(img , 200 , 200 , 400 ,400)
         save_path = os.path.join(save_dir,name.replace('jpg', 'npy'))
         np.save(save_path , imgs )
-
