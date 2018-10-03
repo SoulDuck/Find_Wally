@@ -69,6 +69,11 @@ def cls2onehot(cls, depth):
         print labels[-10:]
     return labels
 
+def makedir(dirpath):
+    if not os.path.isdir(dirpath):
+        os.makedirs(dirpath)
+
+
 
 if __name__ == '__main__':
     rename('cropped_fg/original_fg' , '*')

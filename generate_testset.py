@@ -28,7 +28,7 @@ tmp_dict = {'second' : sec_paths , 'thrid' : trd_paths}
 for key in tmp_dict:
     paths = tmp_dict[key]
     save_dir = os.path.join(root_save_dir, 'second')
-
+    utils.makedir(save_dir)
     for path in paths :
         name = utils.get_name(path)
         img = np.asarray(Image.open(path).convert('RGB'))
