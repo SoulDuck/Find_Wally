@@ -89,7 +89,6 @@ class ImageProcessing(object):
         h, w, ch = np.shape(np_img)
         h_hops = (h - crop_h) / h_stride + 1
         w_hops = (w - crop_w) / w_stride + 1
-        print h_hops, w_hops
 
         for h in range(h_hops):
             for w in range(w_hops):
