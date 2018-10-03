@@ -12,10 +12,9 @@ from PIL import Image
 import utils
 
 root_root_dir = '/mnt/Find_Wally/wally_dataset'
-second_dir=os.path.join( root_root_dir ,'/second_dataset')
+second_dir=os.path.join( root_root_dir ,'second_dataset')
 thrid_dir = os.path.join(root_root_dir , 'third_dataset')
 root_save_dir = 'wally_raspCam_np'
-
 
 img_prc = ImageProcessing()
 sec_paths = glob.glob(os.path.join(second_dir , '*.jpg'))
