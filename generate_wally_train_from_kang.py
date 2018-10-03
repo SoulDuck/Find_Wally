@@ -339,20 +339,19 @@ if __name__ == '__main__':
     bg_list = []
     for idx, row in df.iterrows():
         filename = row.filename
+        if filename in ['wally_1_3.jpg' , 'wally_1_10.jpg','wally_1_11.jpg']:
+            continue;
         x1 = row.x1
         y1 = row.y1
         x2 = row.x2
         y2 = row.y2
 
-        print 'x1 : {} , y1 : {} , x2 : {} , y2 : {} , w : {} , h : {}'.format(x1,y1,x2,y2 ,x2 -x1 ,y2 - y1)
-
+        print 'filename : {} \n x1 : {} , y1 : {} , x2 : {} , y2 : {} , w : {} , h : {}'.format(filename, x1, y1, x2,
+                                                                                                y2, x2 - x1, y2 - y1)
         img_path=os.path.join(imgdir , filename)
         np_img = np.asarray(Image.open(img_path).convert("RGB"))
-        print img_path
         plt.imshow(np_img)
         plt.show()
-
-
         #1
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
