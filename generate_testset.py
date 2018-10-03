@@ -17,10 +17,11 @@ import numpy as np
 from PIL import Image
 import utils
 img_prc = ImageProcessing()
-img_prc.stride_cropping()
+
 sec_paths = glob.glob(os.path.join(second_dir , '*.jpg'))
 trd_paths = glob.glob(os.path.join(thrid_dir , '*.jpg'))
 
+assert len(sec_paths) != 0 and len(trd_paths) != 0
 
 
 tmp_dict = {'second' : sec_paths , 'thrid' : trd_paths}
@@ -31,7 +32,8 @@ for key in tmp_dict:
     for path in paths :
         name = utils.get_name(path)
         img = np.asarray(Image.open(path).convert('RGB'))
-        np_imgs = img_prc.stride_cropping(img , 200 ,200 , 400 ,400)
+        # Cropping
+        imgs = img_prc.stride_cropping(img , 200 , 200 , 400 ,400)
         save_path = os.path.join(save_dir,name.replace('jpg', 'npy'))
-        np.save(save_path , np_imgs )
+        np.save(save_path , imgs )
 
