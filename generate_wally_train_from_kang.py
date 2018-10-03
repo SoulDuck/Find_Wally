@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 # 강상재 쌤이 만들어 주신 데이터 셋
-
+import copy
 import os
 import h5py
 import numpy as np
@@ -357,8 +357,7 @@ if __name__ == '__main__':
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
                                                             stride_size=(400, 400))
-
-        utils.plot_images(fg_imgs)
+        fg_imgs =copy.deepcopy(fg_imgs)
         if len(fg_imgs) ==0:
             print filename
             continue;
@@ -372,7 +371,7 @@ if __name__ == '__main__':
     bg_imgs = np.vstack(bg_list)
 
 
-
+    utils.plot_images(fg_imgs)
 
     np.save('wally_raspCam_np/{}_fg.npy'.format(os.path.splitext(filename)[0]), fg_imgs)
     fg_labs = [0]*len(fg_imgs)
@@ -418,8 +417,7 @@ if __name__ == '__main__':
 
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
-    utils.plot_images(fg_imgs)
-    exit()
+
     np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
     np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
 
