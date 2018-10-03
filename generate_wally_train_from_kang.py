@@ -404,7 +404,6 @@ if __name__ == '__main__':
     bg_imgs_0 =np.vstack([cropped_imgs[:101] , cropped_imgs[103:]])
     np.save('wally_raspCam_np/{}'.format(img_name) , cropped_imgs )
 
-
     img_name = 'wally_1_10.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
     cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
