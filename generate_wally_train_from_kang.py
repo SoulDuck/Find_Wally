@@ -305,6 +305,10 @@ if __name__ == '__main__':
                           (len(notwally_train_xs), notwally_train_xs))
     """
 
+
+    """############################################"""
+    """           Generate Train Image            """
+    """############################################"""
     """
     img_prc = ImageProcessing()
     valid_x, valid_y = next(valid_generator)
@@ -326,12 +330,20 @@ if __name__ == '__main__':
                           (len(wally_imgs), wally_imgs),
                           (len(notWally_imgs), notWally_imgs),)
     """
-    """
+
+    """############################################"""
+    """           Generate Train Image            """
+    """############################################"""
+
     from image_processing import ImageProcessing
     import matplotlib.pyplot as plt
+
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
     img_name = 'wally_1_1.jpg'
+    resize = (80,80)
+
+
 
     df = pd.read_csv('whole_bbox.csv')
     df.loc[:, ["x1", "y1", "x2", "y2"]] = df.loc[:,["x1","y1","x2","y2"]].astype(np.int)
@@ -341,6 +353,7 @@ if __name__ == '__main__':
         filename = row.filename
         if filename in ['wally_1_3.jpg' , 'wally_1_10.jpg','wally_1_11.jpg']:
             continue;
+
         x1 = row.x1
         y1 = row.y1
         x2 = row.x2
@@ -350,8 +363,6 @@ if __name__ == '__main__':
                                                                                                 y2, x2 - x1, y2 - y1)
         img_path=os.path.join(imgdir , filename)
         np_img = np.asarray(Image.open(img_path).convert("RGB"))
-        plt.imshow(np_img)
-        plt.show()
         #1
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
@@ -366,66 +377,73 @@ if __name__ == '__main__':
 
         fg_list.append(fg_imgs)
         bg_list.append(bg_imgs)
+
     fg_imgs = np.vstack(fg_list)
     bg_imgs = np.vstack(bg_list)
+    fg_imgs =img_prc.resize_npImages(fg_imgs , resize)
+    bg_imgs = img_prc.resize_npImages(bg_imgs, resize)
+    print np.shape(fg_imgs )
 
 
-    utils.plot_images(fg_imgs)
+    utils.plot_images(fg_imgs[:60])
 
-    np.save('wally_raspCam_np/{}_fg.npy'.format(os.path.splitext(filename)[0]), fg_imgs)
+    # generate labels
     fg_labs = [0]*len(fg_imgs)
-    np.save('wally_raspCam_np/{}_bg.npy'.format(os.path.splitext(filename)[0]), bg_imgs)
     bg_labs = [1]*len(bg_imgs)
     imgs = np.vstack([fg_imgs , bg_imgs])
     labs = np.asarray(fg_labs + bg_labs)
-    np.save('wally_raspCam_np/train_imgs.npy', imgs)
-    np.save('wally_raspCam_np/train_labs.npy', labs)
-    # tfrecords
-    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecord',(400,  400), (len(bg_imgs), fg_imgs),
+    # save imgs , labs
+    np.save('wally_raspCam_np/train_imgs_80x80.npy', imgs)
+    np.save('wally_raspCam_np/train_labs_80x80.npy', labs)
+    # generate TFrecord
+    img_prc.make_tfrecord('wally_raspCam_np/train_80x80.tfrecord',(80,  80), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs),bg_imgs))
-    """
-    """
-    Test Generator 
-    # 3 . 101 , 102 
-    # 10 140 ,141 
-    # 11 151 
-    """
+
+
+    """############################################"""
+    """             Test Generator                 """
+    """############################################"""
+    # 3.jpg . 101 , 102
+    # 10.jpg 140 ,141
+    # 11.jpg 151
 
     fg_list = []
     bg_list = []
     img_prc = ImageProcessing()
     imgdir = './wally_raspCam'
-
+    #
     img_name = 'wally_1_3.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
     cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
-
+    cropped_imgs=img_prc.resize_npImages(cropped_imgs , resize)
     fg_imgs_0 =cropped_imgs[101:103]
     bg_imgs_0 =np.vstack([cropped_imgs[:101] , cropped_imgs[103:]])
-    np.save('wally_raspCam_np/{}'.format(img_name) , cropped_imgs )
+    np.save('wally_raspCam_np/{}_80x80.npy'.format(img_name) , cropped_imgs )
 
+    #
     img_name = 'wally_1_10.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir , img_name)))
     cropped_imgs , coords = img_prc.stride_cropping(np_img , 200, 200, 400, 400)
+    cropped_imgs = img_prc.resize_npImages(cropped_imgs, resize)
     fg_imgs_1 =cropped_imgs[140:142]
     bg_imgs_1 =np.vstack([cropped_imgs[:140] , cropped_imgs[142:]])
-    np.save('wally_raspCam_np/{}'.format(img_name), cropped_imgs)
+    np.save('wally_raspCam_np/{}_80x80'.format(img_name), cropped_imgs)
 
+    #
     img_name = 'wally_1_11.jpg'
     np_img = np.asarray(Image.open(os.path.join(imgdir, img_name)))
     cropped_imgs, coords = img_prc.stride_cropping(np_img, 200, 200, 400, 400)
+    cropped_imgs = img_prc.resize_npImages(cropped_imgs, resize)
     fg_imgs_2 = cropped_imgs[151:152]
     bg_imgs_2 = np.vstack([cropped_imgs[:151], cropped_imgs[152:]])
-    np.save('wally_raspCam_np/{}'.format(img_name), cropped_imgs)
-
+    np.save('wally_raspCam_np/{}_80x80'.format(img_name), cropped_imgs)
+    #
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
-    utils.plot_images(fg_imgs)
-    exit()
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
-
+    #
     np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
     np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
-
-    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (400, 400), (len(bg_imgs), fg_imgs),
+    #
+    img_prc.make_tfrecord('wally_raspCam_np/test_80x80.tfrecord', resize, (len(bg_imgs), fg_imgs),
                           (len(bg_imgs), bg_imgs))
-    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
+    img_prc.make_tfrecord('wally_raspCam_np/val_80x80.tfrecord', resize, (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
