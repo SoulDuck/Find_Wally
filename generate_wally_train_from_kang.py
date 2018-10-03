@@ -356,7 +356,7 @@ if __name__ == '__main__':
         #1
         fg_imgs, coords = img_prc.guarantee_stride_cropping(np_img, (400, 400),
                                                             (x1,y1,x2,y2),
-                                                            stride_size=(400, 400))
+                                                            stride_size=(10, 10))
         fg_imgs =copy.deepcopy(fg_imgs)
         if len(fg_imgs) ==0:
             print filename
@@ -382,7 +382,7 @@ if __name__ == '__main__':
     np.save('wally_raspCam_np/train_imgs.npy', imgs)
     np.save('wally_raspCam_np/train_labs.npy', labs)
     # tfrecords
-    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecord',(32,  32), (len(bg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/train.tfrecord',(400,  400), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs),bg_imgs))
 
     """
@@ -421,6 +421,6 @@ if __name__ == '__main__':
     np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
     np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
 
-    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (32, 32), (len(bg_imgs), fg_imgs),
+    img_prc.make_tfrecord('wally_raspCam_np/test.tfrecord', (400, 400), (len(bg_imgs), fg_imgs),
                           (len(bg_imgs), bg_imgs))
-    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (32, 32), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
+    img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(bg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
