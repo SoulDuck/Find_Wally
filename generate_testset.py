@@ -32,6 +32,6 @@ for key in tmp_dict:
         name = utils.get_name(path)
         img = np.asarray(Image.open(path).convert('RGB'))
         # Cropping
-        imgs = img_prc.stride_cropping(img , 200 , 200 , 400 ,400)
+        imgs , coords = img_prc.stride_cropping(img , 200 , 200 , 400 ,400)
         save_path = os.path.join(save_dir,name.replace('jpg', 'npy'))
         np.save(save_path , imgs )
