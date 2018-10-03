@@ -221,13 +221,12 @@ class ImageProcessing(object):
             else:
                 continue;
 
-            height, width = np.shape(np_img)[:2]
-
             msg = '\r-Progress : {0}'.format(str(np.sum(np.asarray(counts))) + '/' + str(n_total))
             sys.stdout.write(msg)
             sys.stdout.flush()
             if not resize is None:
                 np_img = np.asarray(Image.fromarray(np_img).resize(resize, Image.ANTIALIAS))
+            height, width = np.shape(np_img)[:2]
             raw_img = np_img.tostring()  # ** Image to String **
             example = tf.train.Example(features=tf.train.Features(feature={
                 'height': _int64_feature(height),
