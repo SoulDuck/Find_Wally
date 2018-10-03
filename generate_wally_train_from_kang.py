@@ -420,9 +420,6 @@ if __name__ == '__main__':
     img_prc.make_tfrecord('wally_raspCam_np/val.tfrecord', (400, 400), (len(fg_imgs), fg_imgs), (len(bg_imgs), bg_imgs))
 
 
-    import utils
-    utils.plot_images(fg_imgs)
-
 
 
 
