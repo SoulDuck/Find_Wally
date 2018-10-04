@@ -441,8 +441,8 @@ if __name__ == '__main__':
     fg_imgs = np.vstack([fg_imgs_0, fg_imgs_1,fg_imgs_2])
     bg_imgs = np.vstack([bg_imgs_0, bg_imgs_1, bg_imgs_2])
     #
-    np.save('wally_raspCam_np/wally_fg.npy'.format(imgdir)  , fg_imgs)
-    np.save('wally_raspCam_np/wally_bg.npy'.format(imgdir) , bg_imgs)
+    np.save('wally_raspCam_np/wally_fg_80x80.npy'.format(imgdir)  , fg_imgs)
+    np.save('wally_raspCam_np/wally_bg_80x80.npy'.format(imgdir) , bg_imgs)
     #
     img_prc.make_tfrecord('wally_raspCam_np/test_80x80.tfrecord', resize, (len(bg_imgs), fg_imgs),
                           (len(bg_imgs), bg_imgs))
