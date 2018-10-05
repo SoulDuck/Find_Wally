@@ -74,6 +74,11 @@ if __name__ == '__main__':
     sec_anns = './wally_dataset/second_dataset/body_crop.csv'
     thr_anns = './wally_dataset/third_dataset/body_crop.csv'
     #
-    fgs ,bgs =extract_wallybody(sec_dir , sec_anns )
+    sec_fgs ,sec_bgs =extract_wallybody(sec_dir , sec_anns )
+    thr_fgs, thr_bgs = extract_wallybody(sec_dir, sec_anns)
+
+    fgs = np.vstack([sec_fgs , thr_fgs])
+    bgs = np.vstack([sec_bgs, sec_fgs])
+
     print np.shape(fgs)
     print np.shape(bgs)
