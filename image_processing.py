@@ -7,6 +7,7 @@ from utils import show_progress , get_names , plot_images , get_name
 import numpy as np
 import random
 import tensorflow as tf
+import utils
 import sys
 
 
@@ -261,8 +262,10 @@ class ImageProcessing(object):
                 Image.fromarray(cropped_img).save(os.path.join( save_dir, '{}_{}.jpg'.format(name , i)))
 
     def resize_npImages(self , np_imgs , resize):
+
         ret_imgs = []
-        for img in np_imgs:
+        for i,img in enumerate(np_imgs):
+            utils.show_progress(i, len(np_imgs))
             img = Image.fromarray(img).convert('RGB').resize(resize)
             img=np.asarray(img)
             ret_imgs.append(img)
