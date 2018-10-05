@@ -50,19 +50,21 @@ def extract_wallybody(dirpath , anns_path):
                 if len(fg_imgs) ==0:
                     print path , x2-x1, y2-y1
                 else:
+                    fg_imgs = img_prc.resize_npImages(fg_imgs, (80, 80))
                     fg_imgs_list.append(fg_imgs)
+
 
                 img=copy.deepcopy(img)
                 # fill rectangle for extract back grounds images
                 cv2.rectangle(img,  (x1,y1) , (x2,y2) , (0,0,0), -1)
 
         bg_imgs , bg_coords = img_prc.stride_cropping(img, 200 ,200 , 400 ,400)
+
+        bg_imgs= img_prc.resize_npImages(bg_imgs, (80, 80))
         bg_imgs_list.append(bg_imgs)
     fgs = np.vstack(fg_imgs_list)
     bgs = np.vstack(bg_imgs_list)
 
-    fgs = img_prc.resize_npImages(fgs,(80,80))
-    bgs = img_prc.resize_npImages(bgs, (80, 80))
     return fgs , bgs
 
 
