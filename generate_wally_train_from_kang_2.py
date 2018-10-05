@@ -82,3 +82,6 @@ if __name__ == '__main__':
 
     print np.shape(fgs)
     print np.shape(bgs)
+
+    np.save('wally_dataset/wally_imgs.npy' , fgs)
+    np.save('wally_dataset/background_imgs.npy' , bgs)
