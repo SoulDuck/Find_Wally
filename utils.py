@@ -29,7 +29,6 @@ def get_names(paths):
     return map(get_name , paths)
 
 
-
 def plot_images(imgs , names=None , random_order=False , savepath=None):
     h=math.ceil(math.sqrt(len(imgs)))
     fig=plt.figure()
