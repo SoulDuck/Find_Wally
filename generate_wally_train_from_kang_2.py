@@ -10,7 +10,7 @@ import pandas as pd
 from PIL import Image
 import random
 from image_processing import ImageProcessing
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 # 얼굴이 있는 사진을 추출합니다
 def extract_wallybody(dirpath , anns_path):
     img_prc =ImageProcessing()
