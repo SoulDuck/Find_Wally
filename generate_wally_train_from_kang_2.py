@@ -69,10 +69,10 @@ def extract_wallybody(dirpath , anns_path):
 
 
 if __name__ == '__main__':
-    sec_dir = '/Users/seongjungkim/Desktop/wally_dataset/second_dataset'
-    thr_dir = '/Users/seongjungkim/Desktop/wally_dataset/third_dataset'
-    sec_anns = '/Users/seongjungkim/Desktop/wally_dataset/second_dataset/body_crop.csv'
-    thr_anns = '/Users/seongjungkim/Desktop/wally_dataset/third_dataset/body_crop.csv'
+    sec_dir = './wally_dataset/second_dataset'
+    thr_dir = './wally_dataset/third_dataset'
+    sec_anns = './wally_dataset/second_dataset/body_crop.csv'
+    thr_anns = './wally_dataset/third_dataset/body_crop.csv'
     #
     fgs ,bgs =extract_wallybody(sec_dir , sec_anns )
     print np.shape(fgs)
