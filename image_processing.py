@@ -121,13 +121,13 @@ class ImageProcessing(object):
 
         return cropped_imgs_coords
 
-    def divide_TVT(self , src , ratio_val , ratio_test , random):
+    def divide_TVT(self , src , ratio_val , ratio_test , random_flag):
 
         # source 을 validation , test 비율로 나눕니다
         #
-        if random:
+        if random_flag:
             indices = range(len(src))
-            random.sample(indices)
+            random.shuffle(indices)
         n_val = int(len(src) * ratio_val)
         n_test =  int(len(src) * ratio_test)
         src_val = src[:n_val]

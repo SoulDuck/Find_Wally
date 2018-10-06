@@ -138,17 +138,15 @@ def aug_lv0(image_ , is_training , crop_h , crop_w):
 
         image = tf.image.random_brightness(image, max_delta=63. / 255.)
         image = tf.image.random_saturation(image, lower=0.5, upper=1.8)
-        image = tf.image.per_image_standardization(image)
+        image = tf.div(tf.cast(image, tf.float32), 255.)
         return image
 
-    def aug_with_test(image , crop_h , crop_w):
-
-        image = tf.image.resize_image_with_crop_or_pad(image, crop_h, crop_w)
-        image = tf.image.per_image_standardization(image)
+    def aug_with_test(image ):
+        image = tf.div(tf.cast(image, tf.float32), 255.)
         return image
 
     image=tf.cond(is_training , lambda : aug_with_train(image_ , crop_h, crop_w )  , \
-                  lambda  : aug_with_test(image_ , crop_h, crop_w ))
+                  lambda  : aug_with_test(image_ ))
 
 
     return image

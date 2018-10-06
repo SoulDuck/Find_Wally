@@ -73,23 +73,28 @@ if __name__ == '__main__':
     thr_dir = './wally_dataset/third_dataset'
     sec_anns = './wally_dataset/second_dataset/body_crop.csv'
     thr_anns = './wally_dataset/third_dataset/body_crop.csv'
+
     #
     sec_fgs ,sec_bgs =extract_wallybody(sec_dir , sec_anns )
+
+
+
+    indices =range(len(sec_bgs))
+    random.shuffle(indices)
+
     thr_fgs, thr_bgs = extract_wallybody(thr_dir, thr_anns)
+
+
 
     fgs = np.vstack([sec_fgs , thr_fgs])
     bgs = np.vstack([sec_bgs, sec_fgs])
-
-
-    print np.shape(fgs)
-    print np.shape(bgs)
 
     np.save('wally_dataset/wally_imgs.npy' , fgs)
     np.save('wally_dataset/background_imgs.npy' , bgs)
 
     img_prc = ImageProcessing()
-    train_fg , test_fg , val_fg =img_prc.divide_TVT(fgs, 0.1 , 0.1)
-    train_bg, test_bg, val_bg = img_prc.divide_TVT(bgs, 0.1, 0.1)
+    train_fg , test_fg , val_fg =img_prc.divide_TVT(fgs, 0.1 , 0.1 , True )
+    train_bg, test_bg, val_bg = img_prc.divide_TVT(bgs, 0.1, 0.1 , True )
 
     np.save('wally_dataset/wally_train_imgs.npy', train_fg)
     np.save('wally_dataset/wally_test_imgs.npy', test_fg)
